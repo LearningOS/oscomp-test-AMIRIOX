@@ -1,4 +1,3 @@
-/musl/busybox echo "#### OS COMP TEST GROUP START basic-glibc ####"
 /musl/busybox echo "#### OS COMP TEST GROUP START basic-musl ####"
 /musl/basic/brk
 /musl/basic/chdir
@@ -32,3 +31,4 @@
 /musl/basic/waitpid
 /musl/basic/write
 /musl/basic/yield
+/musl/busybox echo "#### OS COMP TEST GROUP END basic-musl ####"
