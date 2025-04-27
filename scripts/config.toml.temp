@@ -55,10 +55,6 @@ git = "https://github.com/jasonwhite/syscalls.git"
 rev = "92624de"
 replace-with = "vendored-sources"
 
-[source."git+https://github.com/oscomp/arceos.git"]
-git = "https://github.com/oscomp/arceos.git"
-replace-with = "vendored-sources"
-
 [source."git+https://github.com/rafalh/rust-fatfs?rev=85f06e0"]
 git = "https://github.com/rafalh/rust-fatfs"
 rev = "85f06e0"

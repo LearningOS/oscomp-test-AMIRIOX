@@ -40,6 +40,9 @@ endif
 include scripts/make/oscomp.mk
 
 all: oscomp_build
+	RUSTUP_TOOLCHAIN=nightly-2025-01-18 $(MAKE) test_build ARCH=riscv64 AX_TESTCASE=oscomp BUS=mmio  FEATURES=lwext4_rs 
+	RUSTUP_TOOLCHAIN=nightly-2025-01-18 $(MAKE) test_build ARCH=loongarch64 AX_TESTCASE=oscomp FEATURES=lwext4_rs
+
 
 # export dummy config for clippy
 clippy: defconfig
