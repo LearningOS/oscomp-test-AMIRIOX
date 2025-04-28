@@ -53,6 +53,6 @@ pub fn sys_unlink(pathname: UserConstPtr<c_char>) -> LinuxResult<isize> {
     )
     .unwrap();
     dir.remove_file(file_name);
-    //ax_println!("Please don't go💔");
+    ax_println!("Please don't go💔");
     Ok(0)
 }
