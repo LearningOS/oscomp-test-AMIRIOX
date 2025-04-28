@@ -3,7 +3,13 @@ import re
 import sys
 
 # TODO: Add more commands to test here
-cmds = """"""
+cmds = [
+    "echo \"#### independent command test\"",
+    "ash -c exit",
+    "sh -c exit",
+    "basename /aaa/bbb",
+    "cal",
+]
 
 serial_out = sys.stdin.read()
 result = {}

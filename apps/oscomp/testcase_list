@@ -34,3 +34,11 @@
 /musl/basic/yield
 /musl/busybox echo "#### OS COMP TEST GROUP END basic-musl ####"
 /musl/busybox echo "#### OS COMP TEST GROUP END basic-glibc ####"
+
+/musl/busybox echo "#### OS COMP TEST GROUP START busybox-musl ####"
+/musl/busybox echo "#### independent command test"
+/musl/busybox ash -c exit
+/musl/busybox sh -c exit
+/musl/busybox basename /aaa/bbb
+/musl/busybox cal
+/musl/busybox echo "#### OS COMP TEST GROUP END busybox-musl ####"
