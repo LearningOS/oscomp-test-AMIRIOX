@@ -38,3 +38,21 @@ pub fn sys_open(path: UserConstPtr<c_char>, flags: i32, modes: mode_t) -> LinuxR
     use arceos_posix_api::AT_FDCWD;
     sys_openat(AT_FDCWD as _, path, flags, modes)
 }
+
+pub fn sys_unlink(pathname: UserConstPtr<c_char>) -> LinuxResult<isize> {
+    let path_name = pathname.get_as_str()?;
+    ax_println!("{}", path_name);
+    let (dir_prefix, file_name) = path_name
+        .rsplit_once('/')
+        .unwrap();
+
+    ax_println!("axfs::fops::Directory::open({})", dir_prefix);
+    let dir = axfs::fops::Directory::open_dir(
+        dir_prefix,
+        &axfs::fops::OpenOptions::new().set_read(true),
+    )
+    .unwrap();
+    dir.remove_file(file_name);
+    ax_println!("Please don't go💔");
+    Ok(0)
+}
