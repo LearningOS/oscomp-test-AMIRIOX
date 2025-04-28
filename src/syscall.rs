@@ -126,6 +126,7 @@ fn handle_syscall(tf: &mut TrapFrame, syscall_num: usize) -> isize {
         Sysno::rt_sigtimedwait => sys_rt_sigtimedwait(),
         Sysno::getrlimit => sys_rt_getrlimit(tf.arg0() as _, tf.arg1().into()),
         Sysno::lseek => sys_lseek(tf.arg0() as _, tf.arg1() as _, tf.arg2() as _),
+        #[cfg(x86_64)]
         Sysno::unlink => sys_unlink(tf.arg0().into()),
         Sysno::setrlimit => sys_rt_setrlimit(tf.arg0() as _, tf.arg1().into()),
         _ => {

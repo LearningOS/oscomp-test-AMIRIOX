@@ -53,5 +53,9 @@
 /musl/runtest.exe -w entry-static.exe env
 /musl/runtest.exe -w entry-static.exe fdopen
 /musl/runtest.exe -w entry-static.exe fnmatch
+/musl/runtest.exe -w entry-dynamic.exe fwscanf
+/musl/runtest.exe -w entry-dynamic.exe iconv_open
+/musl/runtest.exe -w entry-dynamic.exe inet_pton
+/musl/runtest.exe -w entry-dynamic.exe mbc
 /musl/busybox echo "#### OS COMP TEST GROUP END libctest-musl ####"
 /musl/busybox echo "#### OS COMP TEST GROUP END libctest-glibc ####"
