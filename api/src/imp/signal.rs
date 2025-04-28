@@ -38,11 +38,11 @@ pub fn sys_rt_sigtimedwait() -> LinuxResult<isize> {
 }
 
 pub fn sys_rt_getrlimit(resource: c_int, rlimits: UserPtr<rlimit>) -> LinuxResult<isize> {
-    info!("sys_rt_getrlimit: 天空即为极限!");
+    // info!("sys_rt_getrlimit: 天空即为极限!");
     Ok(unsafe { api::sys_getrlimit(resource, rlimits.get()?).try_into().unwrap() })
 }
 
 pub fn sys_rt_setrlimit(resource: c_int, rlimits: UserPtr<rlimit>) -> LinuxResult<isize> {
-    info!("sys_rt_getrlimit: 天空即为极限!");
+    // info!("sys_rt_getrlimit: 天空即为极限!");
     Ok(unsafe { api::sys_setrlimit(resource, rlimits.get()?).try_into().unwrap() })
 }
