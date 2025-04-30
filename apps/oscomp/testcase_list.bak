@@ -53,6 +53,7 @@
 /musl/runtest.exe -w entry-static.exe env
 /musl/runtest.exe -w entry-static.exe fdopen
 /musl/runtest.exe -w entry-static.exe fnmatch
+/musl/runtest.exe -w entry-static.exe fscanf
 /musl/runtest.exe -w entry-dynamic.exe fwscanf
 /musl/runtest.exe -w entry-dynamic.exe iconv_open
 /musl/runtest.exe -w entry-dynamic.exe inet_pton

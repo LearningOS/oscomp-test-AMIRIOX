@@ -1,10 +1,62 @@
+/musl/busybox echo "#### OS COMP TEST GROUP START basic-glibc ####"
+/musl/busybox echo "#### OS COMP TEST GROUP START basic-musl ####"
+/musl/basic/brk
+/musl/basic/chdir
+/musl/basic/close
+/musl/basic/clone
+/musl/basic/dup2
+/musl/basic/dup
+/musl/basic/execve
+/musl/basic/exit
+/musl/basic/fork
+/musl/basic/fstat
+/musl/basic/getcwd
+/musl/basic/getdents
+/musl/basic/getpid
+/musl/basic/getppid
+/musl/basic/gettimeofday
+/musl/basic/mkdir_
+/musl/basic/mmap
+/musl/basic/munmap
+/musl/basic/mount
+/musl/basic/openat
+/musl/basic/open
+/musl/basic/sleep
+/musl/basic/pipe
+/musl/basic/read
+/musl/basic/times
+/musl/basic/umount
+/musl/basic/uname
+/musl/basic/unlink
+/musl/basic/wait
+/musl/basic/waitpid
+/musl/basic/write
+/musl/basic/yield
+/musl/busybox echo "#### OS COMP TEST GROUP END basic-musl ####"
+/musl/busybox echo "#### OS COMP TEST GROUP END basic-glibc ####"
+
 /musl/busybox echo "#### OS COMP TEST GROUP START busybox-musl ####"
 /musl/busybox echo "#### independent command test"
+/musl/busybox ash -c exit
+/musl/busybox sh -c exit
+/musl/busybox basename /aaa/bbb
 /musl/busybox cal
 /musl/busybox echo "#### OS COMP TEST GROUP END busybox-musl ####"
 
 /musl/busybox echo "#### OS COMP TEST GROUP START libctest-glibc ####"
 /musl/busybox echo "#### OS COMP TEST GROUP START libctest-musl ####"
+/musl/runtest.exe -w entry-static.exe argv
+/musl/runtest.exe -w entry-static.exe basename
+/musl/runtest.exe -w entry-static.exe clocale_mbfuncs
+/musl/runtest.exe -w entry-static.exe clock_gettime
+/musl/runtest.exe -w entry-static.exe dirname
+/musl/runtest.exe -w entry-static.exe env
+/musl/runtest.exe -w entry-static.exe fdopen
+/musl/runtest.exe -w entry-static.exe fnmatch
 /musl/runtest.exe -w entry-static.exe fscanf
+/musl/runtest.exe -w entry-dynamic.exe fwscanf
+/musl/runtest.exe -w entry-dynamic.exe iconv_open
+/musl/runtest.exe -w entry-dynamic.exe inet_pton
+/musl/runtest.exe -w entry-dynamic.exe mbc
 /musl/busybox echo "#### OS COMP TEST GROUP END libctest-musl ####"
 /musl/busybox echo "#### OS COMP TEST GROUP END libctest-glibc ####"
