@@ -214,6 +214,7 @@ impl File {
     /// After the read, the cursor will be advanced by the number of bytes read.
     pub fn read(&mut self, buf: &mut [u8]) -> AxResult<usize> {
         let node = self.access_node(Cap::READ)?;
+        info!("read_offset: {}", self.offset);
         let read_len = node.read_at(self.offset, buf)?;
         self.offset += read_len as u64;
         Ok(read_len)
@@ -239,6 +240,7 @@ impl File {
         } else {
             self.offset
         };
+        info!("offset: {}, buf pos: {:p}", offset, buf.as_ptr());
         let node = self.access_node(Cap::WRITE)?;
         let write_len = node.write_at(offset, buf)?;
         self.offset = offset + write_len as u64;

@@ -226,6 +226,7 @@ macro_rules! def_resource {
         $(
             #[doc = concat!("Wrapper struct for the namespace resource [`", stringify!($name), "`]")]
             #[allow(non_camel_case_types)]
+            #[derive(Debug)]
             $vis struct $name { __value: () }
 
             impl $name {

@@ -21,6 +21,7 @@ pub fn sys_read(fd: c_int, buf: *mut c_void, count: usize) -> ctypes::ssize_t {
         {
             Ok(get_file_like(fd)?.read(dst)? as ctypes::ssize_t)
         }
+
         #[cfg(not(feature = "fd"))]
         match fd {
             0 => Ok(super::stdio::stdin().read(dst)? as ctypes::ssize_t),
@@ -37,7 +38,8 @@ fn write_impl(fd: c_int, buf: *const c_void, count: usize) -> LinuxResult<ctypes
     let src = unsafe { core::slice::from_raw_parts(buf as *const u8, count) };
     #[cfg(feature = "fd")]
     {
-        Ok(get_file_like(fd)?.write(src)? as ctypes::ssize_t)
+        let write_size = get_file_like(fd)?.write(src)? as ctypes::ssize_t;
+        Ok(write_size)
     }
     #[cfg(not(feature = "fd"))]
     match fd {
@@ -64,8 +66,17 @@ pub unsafe fn sys_writev(fd: c_int, iov: *const ctypes::iovec, iocnt: c_int) -> 
         }
 
         let iovs = unsafe { core::slice::from_raw_parts(iov, iocnt as usize) };
+        /*
+        for iv in iovs.iter() {
+            ax_println!("base: {:p}, len: {}", iv.iov_base, iv.iov_len);
+        }
+        */
         let mut ret = 0;
         for iov in iovs.iter() {
+            if iov.iov_base == 0 as *mut c_void {
+                // TODO: why there's an iovec { base = 0, len = 0 } ? 
+                continue;
+            }
             let result = write_impl(fd, iov.iov_base, iov.iov_len)?;
             ret += result;
 

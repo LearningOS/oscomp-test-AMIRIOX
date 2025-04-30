@@ -5,6 +5,10 @@ use axerrno::LinuxResult;
 
 use crate::ptr::{PtrWrapper, UserPtr};
 
+pub fn sys_pipe(fds: UserPtr<i32>) -> LinuxResult<isize> {
+    unimplemented!("? sys_pipe2");
+}
+
 pub fn sys_pipe2(fds: UserPtr<i32>) -> LinuxResult<isize> {
     let fds = fds.get_as_array(2)?;
     let fds_slice: &mut [c_int] = unsafe { core::slice::from_raw_parts_mut(fds, 2) };

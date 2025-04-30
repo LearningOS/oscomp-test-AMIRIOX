@@ -1,5 +1,7 @@
 use alloc::sync::Arc;
+use core::cmp::Ordering::{self, *};
 use core::ffi::c_int;
+use core::sync::atomic::AtomicBool;
 
 use axerrno::{LinuxError, LinuxResult};
 use axio::PollState;
@@ -108,29 +110,33 @@ impl Pipe {
 
 impl FileLike for Pipe {
     fn read(&self, buf: &mut [u8]) -> LinuxResult<usize> {
+        /*
+                let test_data = b"      42";
+                buf[..8].copy_from_slice(test_data);
+                return Ok(8);
+        */
         if !self.readable() {
             return Err(LinuxError::EPERM);
         }
-        let mut read_size = 0usize;
-        let max_len = buf.len();
+
+        let mut read_size = 0;
         loop {
-            let mut ring_buffer = self.buffer.lock();
-            let loop_read = ring_buffer.available_read();
-            if loop_read == 0 {
-                if self.write_end_close() {
-                    return Ok(read_size);
+            let mut ring = self.buffer.lock();
+            match (ring.available_read() == 0, self.write_end_close()) {
+                (true, true) => break Ok(0),
+                (true, false) => {
+                    drop(ring);
+                    crate::sys_sched_yield();
+                    continue;
                 }
-                drop(ring_buffer);
-                // Data not ready, wait for write end
-                crate::sys_sched_yield(); // TODO: use synconize primitive
-                continue;
-            }
-            for _ in 0..loop_read {
-                if read_size == max_len {
-                    return Ok(read_size);
+                _ => {
+                    let loop_read = buf.len().min(ring.available_read());
+                    for i in 0..loop_read {
+                        buf[i] = ring.read_byte();
+                        read_size += 1;
+                    }
+                    break Ok(read_size);
                 }
-                buf[read_size] = ring_buffer.read_byte();
-                read_size += 1;
             }
         }
     }
@@ -206,6 +212,7 @@ pub fn sys_pipe(fds: &mut [c_int]) -> c_int {
             close_file_like(read_fd).ok();
         })?;
 
+        ax_println!("create pipe: {} {}", read_fd, write_fd);
         fds[0] = read_fd as c_int;
         fds[1] = write_fd as c_int;
 
