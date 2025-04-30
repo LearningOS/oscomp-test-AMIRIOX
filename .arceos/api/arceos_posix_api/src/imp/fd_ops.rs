@@ -59,12 +59,13 @@ pub fn close_file_like(fd: c_int) -> LinuxResult {
         .remove(fd as usize)
         .ok_or(LinuxError::EBADF)?;
     drop(f);
-    ax_println!(
-        "[close] fd={} removed, FD_TABLE len={}",
-        fd,
-        FD_TABLE.read().count()
-    ); // 调试
-
+    /*
+        ax_println!(
+            "[close] fd={} removed, FD_TABLE len={}",
+            fd,
+            FD_TABLE.read().count()
+        );
+    */
     Ok(())
 }
 

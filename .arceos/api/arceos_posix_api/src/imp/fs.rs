@@ -50,7 +50,8 @@ impl File {
 
 impl FileLike for File {
     fn read(&self, buf: &mut [u8]) -> LinuxResult<usize> {
-        let ret = self.inner.lock().read(buf)?;
+        Ok(self.inner.lock().read(buf)?)
+        /*
         ax_println!("Read: {} Bytes", ret);
         for &c in &buf[..ret] {
             if c.is_ascii_graphic() || c == b' ' {
@@ -60,14 +61,16 @@ impl FileLike for File {
             }
         }
         ax_println!();
-        Ok(ret)
+        */
     }
 
     fn write(&self, buf: &[u8]) -> LinuxResult<usize> {
+        /*
         for &c in buf.iter() {
             ax_print!("{}", c as char);
         }
         ax_println!();
+        */
         Ok(self.inner.lock().write(buf)?)
     }
 

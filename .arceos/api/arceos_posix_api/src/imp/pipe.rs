@@ -212,7 +212,7 @@ pub fn sys_pipe(fds: &mut [c_int]) -> c_int {
             close_file_like(read_fd).ok();
         })?;
 
-        ax_println!("create pipe: {} {}", read_fd, write_fd);
+        // ax_println!("create pipe: {} {}", read_fd, write_fd);
         fds[0] = read_fd as c_int;
         fds[1] = write_fd as c_int;
 

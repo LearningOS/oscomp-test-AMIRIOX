@@ -7,7 +7,6 @@ use crate::ptr::{PtrWrapper, UserConstPtr, UserPtr};
 
 pub fn sys_read(fd: i32, buf: UserPtr<c_void>, count: usize) -> LinuxResult<isize> {
     let buf = buf.get_as_bytes(count)?;
-    info!("reading {}", fd);
     Ok(api::sys_read(fd, buf, count))
 }
 
@@ -32,7 +31,7 @@ pub fn sys_openat(
     modes: mode_t,
 ) -> LinuxResult<isize> {
     let path = path.get_as_null_terminated()?;
-    ax_println!("create {:?}", unsafe { CStr::from_ptr(path.as_ptr()) });
+    // ax_println!("create {:?}", unsafe { CStr::from_ptr(path.as_ptr()) });
     Ok(api::sys_openat(dirfd, path.as_ptr(), flags, modes) as _)
 }
 
