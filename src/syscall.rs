@@ -131,6 +131,8 @@ fn handle_syscall(tf: &mut TrapFrame, syscall_num: usize) -> isize {
         Sysno::setrlimit => sys_rt_setrlimit(tf.arg0() as _, tf.arg1().into()),
         #[cfg(target_arch = "x86_64")]
         Sysno::pipe => sys_pipe2(tf.arg0().into()),
+        Sysno::tkill => unimplemented!("iwc tkill😅"),
+        Sysno::tgkill => unimplemented!("iwc tgkill😅"),
         _ => {
             warn!("Unimplemented syscall: {}", sysno);
             Err(LinuxError::ENOSYS)

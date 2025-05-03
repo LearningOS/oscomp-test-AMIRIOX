@@ -58,6 +58,13 @@
 /musl/runtest.exe -w entry-static.exe iconv_open
 /musl/runtest.exe -w entry-static.exe inet_pton
 /musl/runtest.exe -w entry-static.exe mbc
+/musl/runtest.exe -w entry-static.exe memstream
+/musl/runtest.exe -w entry-static.exe qsort
+/musl/runtest.exe -w entry-static.exe random
+/musl/runtest.exe -w entry-static.exe search_hsearch
+/musl/runtest.exe -w entry-static.exe search_insque
+/musl/runtest.exe -w entry-static.exe search_lsearch
+/musl/runtest.exe -w entry-static.exe search_tsearch
 
 //musl/runtest.exe -w entry-dynamic.exe argv
 /musl/runtest.exe -w entry-dynamic.exe basename
@@ -72,5 +79,12 @@
 /musl/runtest.exe -w entry-dynamic.exe iconv_open
 /musl/runtest.exe -w entry-dynamic.exe inet_pton
 /musl/runtest.exe -w entry-dynamic.exe mbc
+/musl/runtest.exe -w entry-dynamic.exe memstream
+/musl/runtest.exe -w entry-dynamic.exe qsort
+/musl/runtest.exe -w entry-dynamic.exe random
+/musl/runtest.exe -w entry-dynamic.exe search_hsearch
+/musl/runtest.exe -w entry-dynamic.exe search_insque
+/musl/runtest.exe -w entry-dynamic.exe search_lsearch
+/musl/runtest.exe -w entry-dynamic.exe search_tsearch
 /musl/busybox echo "#### OS COMP TEST GROUP END libctest-musl ####"
 /musl/busybox echo "#### OS COMP TEST GROUP END libctest-glibc ####"

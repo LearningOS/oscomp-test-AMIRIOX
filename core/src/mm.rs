@@ -71,7 +71,7 @@ fn map_elf(uspace: &mut AddrSpace, elf: &ElfFile) -> AxResult<(VirtAddr, [AuxvEn
             .get(segement.offset..segement.offset + segement.filesz as usize)
             .ok_or(AxError::InvalidData)?;
         uspace.write(segement.vaddr, seg_data)?;
-        // TDOO: flush the I-cache
+        // TODO: flush the I-cache
     }
 
     Ok((
