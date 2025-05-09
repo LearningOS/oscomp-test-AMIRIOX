@@ -122,7 +122,7 @@ fn handle_syscall(tf: &mut TrapFrame, syscall_num: usize) -> isize {
             tf.arg2().into(),
             tf.arg3() as _,
         ),
-        Sysno::kill => sys_rt_kill(),
+        Sysno::kill => sys_rt_kill(tf.arg0() as _, tf.arg1() as _),
         Sysno::rt_sigtimedwait => sys_rt_sigtimedwait(),
         Sysno::getrlimit => sys_rt_getrlimit(tf.arg0() as _, tf.arg1().into()),
         Sysno::lseek => sys_lseek(tf.arg0() as _, tf.arg1() as _, tf.arg2() as _),
@@ -131,8 +131,16 @@ fn handle_syscall(tf: &mut TrapFrame, syscall_num: usize) -> isize {
         Sysno::setrlimit => sys_rt_setrlimit(tf.arg0() as _, tf.arg1().into()),
         #[cfg(target_arch = "x86_64")]
         Sysno::pipe => sys_pipe2(tf.arg0().into()),
-        Sysno::tkill => unimplemented!("iwc tkill😅"),
-        Sysno::tgkill => unimplemented!("iwc tgkill😅"),
+        Sysno::tkill => sys_tkill(tf.arg0() as _, tf.arg0() as _),
+        Sysno::tgkill => sys_tgkill(tf.arg0() as _, tf.arg1() as _, tf.arg2() as _),
+        Sysno::futex => sys_futex(
+            tf.arg0().into(),
+            tf.arg1() as _,
+            tf.arg2() as _,
+            tf.arg3().into(),
+            tf.arg4().into(),
+            tf.arg5() as _,
+        ),
         _ => {
             warn!("Unimplemented syscall: {}", sysno);
             Err(LinuxError::ENOSYS)

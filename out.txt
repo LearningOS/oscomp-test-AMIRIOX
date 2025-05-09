@@ -1,0 +1,554 @@
+Set AX_ROOT (ArceOS directory) to /home/amiriox/oscomp/.arceos
+make[1]: Entering directory '/home/amiriox/oscomp/.arceos'
+[93;1mwarning[0m: disk image "disk.img" already exists!
+make[1]: Leaving directory '/home/amiriox/oscomp/.arceos'
+make[1]: Entering directory '/home/amiriox/oscomp/.arceos'
+[37maxconfig-gen[0m [90mconfigs/defconfig.toml configs/platforms/x86_64-qemu-q35.toml /home/amiriox/oscomp/configs/x86_64.toml -w smp=1 -w arch=x86_64 -w platform=x86_64-qemu-q35 -o "/home/amiriox/oscomp/.axconfig.toml"[0m
+make[1]: Leaving directory '/home/amiriox/oscomp/.arceos'
+cp /home/amiriox/oscomp/sdcard-x86_64.img /home/amiriox/oscomp/.arceos/disk.img
+make AX_TESTCASE=oscomp BLK=y NET=y FEATURES=fp_simd,lwext4_rs LOG=debug run
+make[1]: Entering directory '/home/amiriox/oscomp'
+Set AX_ROOT (ArceOS directory) to /home/amiriox/oscomp/.arceos
+make[2]: Entering directory '/home/amiriox/oscomp/.arceos'
+[93;1mwarning[0m: disk image "disk.img" already exists!
+make[2]: Leaving directory '/home/amiriox/oscomp/.arceos'
+make[2]: Entering directory '/home/amiriox/oscomp/.arceos'
+[37maxconfig-gen[0m [90mconfigs/defconfig.toml configs/platforms/x86_64-qemu-q35.toml /home/amiriox/oscomp/configs/x86_64.toml -w smp=1 -w arch=x86_64 -w platform=x86_64-qemu-q35 -o "/home/amiriox/oscomp/.axconfig.toml" -c "/home/amiriox/oscomp/.axconfig.toml"[0m
+    [92;1mBuilding[0m App: oscomp, Arch: x86_64, Platform: x86_64-qemu-q35, App type: rust
+[37mcargo -C /home/amiriox/oscomp build[0m [90m-Z unstable-options --target x86_64-unknown-none --target-dir /home/amiriox/oscomp/target --release  --features "axfeat/log-level-debug axfeat/fp_simd axfeat/lwext4_rs"[0m
+[37mrust-objcopy --binary-architecture=x86_64[0m [90m/home/amiriox/oscomp/oscomp_x86_64-qemu-q35.elf --strip-all -O binary /home/amiriox/oscomp/oscomp_x86_64-qemu-q35.bin[0m
+    [96;1mRunning[0m on qemu...
+[37mqemu-system-x86_64[0m [90m-m 128M -smp 1 -machine q35 -kernel /home/amiriox/oscomp/oscomp_x86_64-qemu-q35.elf -device virtio-blk-pci,drive=disk0 -drive id=disk0,if=none,format=raw,file=disk.img -device virtio-net-pci,netdev=net0 -netdev user,id=net0,hostfwd=tcp::5555-:5555,hostfwd=udp::5555-:5555 -nographic[0m
+c[?7l[2J[0mSeaBIOS (version 1.16.3-2.fc40)
+
+
+iPXE (https://ipxe.org) 00:03.0 CA00 PCI2.10 PnP PMM+06FC9BA0+06F09BA0 CA00
+Press Ctrl-B to configure iPXE (PCI 00:03.0)...                                                                               
+
+
+Booting from ROM..
+       d8888                            .d88888b.   .d8888b.
+      d88888                           d88P" "Y88b d88P  Y88b
+     d88P888                           888     888 Y88b.
+    d88P 888 888d888  .d8888b  .d88b.  888     888  "Y888b.
+   d88P  888 888P"   d88P"    d8P  Y8b 888     888     "Y88b.
+  d88P   888 888     888      88888888 888     888       "888
+ d8888888888 888     Y88b.    Y8b.     Y88b. .d88P Y88b  d88P
+d88P     888 888      "Y8888P  "Y8888   "Y88888P"   "Y8888P"
+
+arch = x86_64
+platform = x86_64-qemu-q35
+target = x86_64-unknown-none
+build_mode = release
+log_level = debug
+smp = 1
+
+[37m[  0.001452 axruntime:130] [32mLogging is enabled.[m
+[m[37m[  0.001934 axruntime:131] [32mPrimary CPU 0 started, dtb = 0x0.[m
+[m[37m[  0.002108 axruntime:133] [32mFound physcial memory regions:[m
+[m[37m[  0.002314 axruntime:135] [32m  [PA:0x200000, PA:0x286000) .text (READ | EXECUTE | RESERVED)[m
+[m[37m[  0.002669 axruntime:135] [32m  [PA:0x286000, PA:0x29f000) .rodata (READ | RESERVED)[m
+[m[37m[  0.002873 axruntime:135] [32m  [PA:0x29f000, PA:0x2b1000) .data .tdata .tbss .percpu (READ | WRITE | RESERVED)[m
+[m[37m[  0.003068 axruntime:135] [32m  [PA:0x2b1000, PA:0x2f1000) boot stack (READ | WRITE | RESERVED)[m
+[m[37m[  0.003263 axruntime:135] [32m  [PA:0x2f1000, PA:0x2fa000) .bss (READ | WRITE | RESERVED)[m
+[m[37m[  0.003450 axruntime:135] [32m  [PA:0x1000, PA:0x9f000) low memory (READ | WRITE | RESERVED)[m
+[m[37m[  0.003658 axruntime:135] [32m  [PA:0x2fa000, PA:0x8000000) free memory (READ | WRITE | FREE)[m
+[m[37m[  0.003869 axruntime:135] [32m  [PA:0xb0000000, PA:0xc0000000) mmio (READ | WRITE | DEVICE | RESERVED)[m
+[m[37m[  0.004158 axruntime:135] [32m  [PA:0xfe000000, PA:0xfec00000) mmio (READ | WRITE | DEVICE | RESERVED)[m
+[m[37m[  0.004325 axruntime:135] [32m  [PA:0xfec00000, PA:0xfec01000) mmio (READ | WRITE | DEVICE | RESERVED)[m
+[m[37m[  0.004620 axruntime:135] [32m  [PA:0xfed00000, PA:0xfed01000) mmio (READ | WRITE | DEVICE | RESERVED)[m
+[m[37m[  0.005086 axruntime:135] [32m  [PA:0xfee00000, PA:0xfee01000) mmio (READ | WRITE | DEVICE | RESERVED)[m
+[m[37m[  0.005297 axruntime:210] [32mInitialize global memory allocator...[m
+[m[37m[  0.005505 axruntime:211] [32m  use TLSF allocator.[m
+[m[37m[  0.005804 axalloc:212] [36minitialize global allocator at: [0xffff8000002fa000, 0xffff800008000000)[m
+[m[37m[  0.006633 axmm:60] [32mInitialize virtual memory management...[m
+[m[37m[  0.006965 axmm::backend::linear:20] [36mmap_linear: [VA:0xffff800000200000, VA:0xffff800000286000) -> [PA:0x200000, PA:0x286000) READ | EXECUTE[m
+[m[37m[  0.007863 axmm::backend::linear:20] [36mmap_linear: [VA:0xffff800000286000, VA:0xffff80000029f000) -> [PA:0x286000, PA:0x29f000) READ[m
+[m[37m[  0.008246 axmm::backend::linear:20] [36mmap_linear: [VA:0xffff80000029f000, VA:0xffff8000002b1000) -> [PA:0x29f000, PA:0x2b1000) READ | WRITE[m
+[m[37m[  0.008538 axmm::backend::linear:20] [36mmap_linear: [VA:0xffff8000002b1000, VA:0xffff8000002f1000) -> [PA:0x2b1000, PA:0x2f1000) READ | WRITE[m
+[m[37m[  0.008868 axmm::backend::linear:20] [36mmap_linear: [VA:0xffff8000002f1000, VA:0xffff8000002fa000) -> [PA:0x2f1000, PA:0x2fa000) READ | WRITE[m
+[m[37m[  0.009231 axmm::backend::linear:20] [36mmap_linear: [VA:0xffff800000001000, VA:0xffff80000009f000) -> [PA:0x1000, PA:0x9f000) READ | WRITE[m
+[m[37m[  0.009579 axmm::backend::linear:20] [36mmap_linear: [VA:0xffff8000002fa000, VA:0xffff800008000000) -> [PA:0x2fa000, PA:0x8000000) READ | WRITE[m
+[m[37m[  0.013842 axmm::backend::linear:20] [36mmap_linear: [VA:0xffff8000b0000000, VA:0xffff8000c0000000) -> [PA:0xb0000000, PA:0xc0000000) READ | WRITE | DEVICE[m
+[m[37m[  0.022957 axmm::backend::linear:20] [36mmap_linear: [VA:0xffff8000fe000000, VA:0xffff8000fec00000) -> [PA:0xfe000000, PA:0xfec00000) READ | WRITE | DEVICE[m
+[m[37m[  0.023730 axmm::backend::linear:20] [36mmap_linear: [VA:0xffff8000fec00000, VA:0xffff8000fec01000) -> [PA:0xfec00000, PA:0xfec01000) READ | WRITE | DEVICE[m
+[m[37m[  0.024012 axmm::backend::linear:20] [36mmap_linear: [VA:0xffff8000fed00000, VA:0xffff8000fed01000) -> [PA:0xfed00000, PA:0xfed01000) READ | WRITE | DEVICE[m
+[m[37m[  0.024417 axmm::backend::linear:20] [36mmap_linear: [VA:0xffff8000fee00000, VA:0xffff8000fee01000) -> [PA:0xfee00000, PA:0xfee01000) READ | WRITE | DEVICE[m
+[m[37m[  0.024902 axmm:63] [36mkernel address space init OK: AddrSpace {
+    va_range: VA:0xffff800000000000..VA:0xfffffffffffff000,
+    page_table_root: PA:0x302000,
+    areas: [
+        MemoryArea {
+            va_range: VA:0xffff800000001000..VA:0xffff80000009f000,
+            flags: READ | WRITE,
+        },
+        MemoryArea {
+            va_range: VA:0xffff800000200000..VA:0xffff800000286000,
+            flags: READ | EXECUTE,
+        },
+        MemoryArea {
+            va_range: VA:0xffff800000286000..VA:0xffff80000029f000,
+            flags: READ,
+        },
+        MemoryArea {
+            va_range: VA:0xffff80000029f000..VA:0xffff8000002b1000,
+            flags: READ | WRITE,
+        },
+        MemoryArea {
+            va_range: VA:0xffff8000002b1000..VA:0xffff8000002f1000,
+            flags: READ | WRITE,
+        },
+        MemoryArea {
+            va_range: VA:0xffff8000002f1000..VA:0xffff8000002fa000,
+            flags: READ | WRITE,
+        },
+        MemoryArea {
+            va_range: VA:0xffff8000002fa000..VA:0xffff800008000000,
+            flags: READ | WRITE,
+        },
+        MemoryArea {
+            va_range: VA:0xffff8000b0000000..VA:0xffff8000c0000000,
+            flags: READ | WRITE | DEVICE,
+        },
+        MemoryArea {
+            va_range: VA:0xffff8000fe000000..VA:0xffff8000fec00000,
+            flags: READ | WRITE | DEVICE,
+        },
+        MemoryArea {
+            va_range: VA:0xffff8000fec00000..VA:0xffff8000fec01000,
+            flags: READ | WRITE | DEVICE,
+        },
+        MemoryArea {
+            va_range: VA:0xffff8000fed00000..VA:0xffff8000fed01000,
+            flags: READ | WRITE | DEVICE,
+        },
+        MemoryArea {
+            va_range: VA:0xffff8000fee00000..VA:0xffff8000fee01000,
+            flags: READ | WRITE | DEVICE,
+        },
+    ],
+}[m
+[m[37m[  0.031586 axruntime:150] [32mInitialize platform devices...[m
+[m[37m[  0.031855 axhal::platform::x86_pc::apic:90] [32mInitialize Local APIC...[m
+[m[37m[  0.032142 axhal::platform::x86_pc::apic:108] [32mUsing xAPIC.[m
+[m[37m[  0.032794 axhal::platform::x86_pc::apic:119] [32mInitialize IO APIC...[m
+[m[37m[  0.033169 axtask::api:81] [32mInitialize scheduling...[m
+[m[37m[  0.033672 axtask::task:115] [36mnew task: Task(1, "idle")[m
+[m[37m[  0.034200 axtask::task:115] [36mnew task: Task(3, "gc")[m
+[m[37m[  0.034454 axalloc:118] [36mexpand heap memory: [0xffff8000003cf000, 0xffff80000040f000)[m
+[m[37m[  0.034877 axalloc:118] [36mexpand heap memory: [0xffff80000040f000, 0xffff80000048f000)[m
+[m[37m[  0.035198 axtask::api:87] [32m  use FIFO scheduler.[m
+[m[37m[  0.035396 axdriver:152] [32mInitialize device drivers...[m
+[m[37m[  0.035637 axdriver:153] [32m  device model: static[m
+[m[37m[  0.036012 axdriver::bus::pci:97] [36mPCI 00:00.0: 8086:29c0 (class 06.00, rev 00) Standard[m
+[m[37m[  0.036924 axdriver::bus::pci:97] [36mPCI 00:01.0: 1234:1111 (class 03.00, rev 02) Standard[m
+[m[37m[  0.037342 axdriver::bus::pci:54] [36m  BAR 0: MEM [0xfd000000, 0xfe000000) pref[m
+[m[37m[  0.037690 axdriver::bus::pci:54] [36m  BAR 2: MEM [0xfebd0000, 0xfebd1000)[m
+[m[37m[  0.037883 axdriver::bus::pci:97] [36mPCI 00:02.0: 1af4:1001 (class 01.00, rev 00) Standard[m
+[m[37m[  0.038302 axdriver::bus::pci:44] [36m  BAR 0: IO  [0xc000, 0xc080)[m
+[m[37m[  0.038739 axdriver::bus::pci:54] [36m  BAR 1: MEM [0xfebd1000, 0xfebd2000)[m
+[m[37m[  0.039456 axdriver::bus::pci:54] [36m  BAR 4: MEM [0xfe000000, 0xfe004000) 64bit pref[m
+[m[37m[  0.041096 virtio_drivers::transport:78] [36mDevice features: BlkFeature(SEG_MAX | GEOMETRY | BLK_SIZE | FLUSH | TOPOLOGY | CONFIG_WCE | DISCARD | WRITE_ZEROES | RING_INDIRECT_DESC | RING_EVENT_IDX | VERSION_1)[m
+[m[37m[  0.041796 virtio_drivers::device::blk:59] [32mconfig: 0xffff8000fe002000[m
+[m[37m[  0.042086 virtio_drivers::device::blk:64] [32mfound a block device of size 131072KB[m
+[m[37m[  0.042795 axdriver::bus::pci:104] [32mregistered a new Block device at 00:02.0: "virtio-blk"[m
+[m[37m[  0.043111 axdriver::bus::pci:97] [36mPCI 00:03.0: 1af4:1000 (class 02.00, rev 00) Standard[m
+[m[37m[  0.044227 axdriver::bus::pci:44] [36m  BAR 0: IO  [0xc0c0, 0xc0e0)[m
+[m[37m[  0.044563 axdriver::bus::pci:54] [36m  BAR 1: MEM [0xfebd2000, 0xfebd3000)[m
+[m[37m[  0.045036 axdriver::bus::pci:54] [36m  BAR 4: MEM [0xfe004000, 0xfe008000) 64bit pref[m
+[m[37m[  0.045991 virtio_drivers::transport:78] [36mDevice features: Features(CTRL_GUEST_OFFLOADS | MAC | MRG_RXBUF | STATUS | CTRL_VQ | CTRL_RX | CTRL_VLAN | CTRL_RX_EXTRA | GUEST_ANNOUNCE | CTL_MAC_ADDR | RING_INDIRECT_DESC | RING_EVENT_IDX | VERSION_1)[m
+[m[37m[  0.046914 virtio_drivers::device::net::dev_raw:30] [32mnegotiated_features Features(MAC | STATUS | RING_INDIRECT_DESC | RING_EVENT_IDX)[m
+[m[37m[  0.047349 virtio_drivers::device::net::dev_raw:37] [36mGot MAC=[52, 54, 00, 12, 34, 56], status=Status(LINK_UP)[m
+[m[37m[  0.049195 axdriver::bus::pci:104] [32mregistered a new Net device at 00:03.0: "virtio-net"[m
+[m[37m[  0.049459 axdriver::bus::pci:97] [36mPCI 00:1f.0: 8086:2918 (class 06.01, rev 02) Standard[m
+[m[37m[  0.050042 axdriver::bus::pci:97] [36mPCI 00:1f.2: 8086:2922 (class 01.06, rev 02) Standard[m
+[m[37m[  0.050638 axdriver::bus::pci:44] [36m  BAR 4: IO  [0xc0e0, 0xc100)[m
+[m[37m[  0.050972 axdriver::bus::pci:54] [36m  BAR 5: MEM [0xfebd3000, 0xfebd4000)[m
+[m[37m[  0.051133 axdriver::bus::pci:97] [36mPCI 00:1f.3: 8086:2930 (class 0c.05, rev 02) Standard[m
+[m[37m[  0.051536 axdriver::bus::pci:44] [36m  BAR 4: IO  [0x700, 0x740)[m
+[m[37m[  0.062457 axdriver:160] [36mnumber of NICs: 1[m
+[m[37m[  0.062609 axdriver:163] [36m  NIC 0: "virtio-net"[m
+[m[37m[  0.062801 axdriver:168] [36mnumber of block devices: 1[m
+[m[37m[  0.062964 axdriver:171] [36m  block device 0: "virtio-blk"[m
+[m[37m[  0.063196 axfs:42] [32mInitialize filesystems...[m
+[m[37m[  0.063361 axfs:45] [32m  use block device 0: "virtio-blk"[m
+[m[37m[  0.063569 axfs::fs::lwext4_rust:32] [32mGot Disk size:134217728, position:0[m
+[m[37m[  0.063967 lwext4_rust::blockdev:92] [32mNew an Ext4 Block Device[m
+[m[37m[  0.065506 lwext4_rust::ulibc:30] [32m[lwext4] "%s"[m
+[m[37m[  0.065832 lwext4_rust::ulibc:30] [32m[lwext4] "l: %d   "[m
+[m[37m[  0.065983 lwext4_rust::ulibc:30] [32m[lwext4] "[info]  sblock features_incompatible:\n"[m
+[m[37m[  0.066318 lwext4_rust::ulibc:30] [32m[lwext4] "%s"[m
+[m[37m[  0.066484 lwext4_rust::ulibc:30] [32m[lwext4] "l: %d   "[m
+[m[37m[  0.067039 lwext4_rust::ulibc:30] [32m[lwext4] "filetype\n"[m
+[m[37m[  0.067524 lwext4_rust::ulibc:30] [32m[lwext4] "%s"[m
+[m[37m[  0.067989 lwext4_rust::ulibc:30] [32m[lwext4] "l: %d   "[m
+[m[37m[  0.068482 lwext4_rust::ulibc:30] [32m[lwext4] "extents\n"[m
+[m[37m[  0.069076 lwext4_rust::ulibc:30] [32m[lwext4] "%s"[m
+[m[37m[  0.069374 lwext4_rust::ulibc:30] [32m[lwext4] "l: %d   "[m
+[m[37m[  0.069655 lwext4_rust::ulibc:30] [32m[lwext4] "64bit\n"[m
+[m[37m[  0.069928 lwext4_rust::ulibc:30] [32m[lwext4] "%s"[m
+[m[37m[  0.070152 lwext4_rust::ulibc:30] [32m[lwext4] "l: %d   "[m
+[m[37m[  0.070458 lwext4_rust::ulibc:30] [32m[lwext4] "flex_bg\n"[m
+[m[37m[  0.070842 lwext4_rust::ulibc:30] [32m[lwext4] "%s"[m
+[m[37m[  0.071116 lwext4_rust::ulibc:30] [32m[lwext4] "l: %d   "[m
+[m[37m[  0.071419 lwext4_rust::ulibc:30] [32m[lwext4] "[info]  sblock features_compatible:\n"[m
+[m[37m[  0.071726 lwext4_rust::ulibc:30] [32m[lwext4] "%s"[m
+[m[37m[  0.071898 lwext4_rust::ulibc:30] [32m[lwext4] "l: %d   "[m
+[m[37m[  0.072081 lwext4_rust::ulibc:30] [32m[lwext4] "has_journal\n"[m
+[m[37m[  0.072292 lwext4_rust::ulibc:30] [32m[lwext4] "%s"[m
+[m[37m[  0.072479 lwext4_rust::ulibc:30] [32m[lwext4] "l: %d   "[m
+[m[37m[  0.072656 lwext4_rust::ulibc:30] [32m[lwext4] "ext_attr\n"[m
+[m[37m[  0.072898 lwext4_rust::ulibc:30] [32m[lwext4] "%s"[m
+[m[37m[  0.073073 lwext4_rust::ulibc:30] [32m[lwext4] "l: %d   "[m
+[m[37m[  0.073292 lwext4_rust::ulibc:30] [32m[lwext4] "resize_inode\n"[m
+[m[37m[  0.073552 lwext4_rust::ulibc:30] [32m[lwext4] "%s"[m
+[m[37m[  0.073792 lwext4_rust::ulibc:30] [32m[lwext4] "l: %d   "[m
+[m[37m[  0.073992 lwext4_rust::ulibc:30] [32m[lwext4] "dir_index\n"[m
+[m[37m[  0.074237 lwext4_rust::ulibc:30] [32m[lwext4] "%s"[m
+[m[37m[  0.074419 lwext4_rust::ulibc:30] [32m[lwext4] "l: %d   "[m
+[m[37m[  0.074736 lwext4_rust::ulibc:30] [32m[lwext4] "[info]  sblock features_read_only:\n"[m
+[m[37m[  0.075049 lwext4_rust::ulibc:30] [32m[lwext4] "%s"[m
+[m[37m[  0.075349 lwext4_rust::ulibc:30] [32m[lwext4] "l: %d   "[m
+[m[37m[  0.075611 lwext4_rust::ulibc:30] [32m[lwext4] "sparse_super\n"[m
+[m[37m[  0.075841 lwext4_rust::ulibc:30] [32m[lwext4] "%s"[m
+[m[37m[  0.076105 lwext4_rust::ulibc:30] [32m[lwext4] "l: %d   "[m
+[m[37m[  0.076413 lwext4_rust::ulibc:30] [32m[lwext4] "large_file\n"[m
+[m[37m[  0.076824 lwext4_rust::ulibc:30] [32m[lwext4] "%s"[m
+[m[37m[  0.077124 lwext4_rust::ulibc:30] [32m[lwext4] "l: %d   "[m
+[m[37m[  0.077488 lwext4_rust::ulibc:30] [32m[lwext4] "huge_file\n"[m
+[m[37m[  0.077873 lwext4_rust::ulibc:30] [32m[lwext4] "%s"[m
+[m[37m[  0.078133 lwext4_rust::ulibc:30] [32m[lwext4] "l: %d   "[m
+[m[37m[  0.078429 lwext4_rust::ulibc:30] [32m[lwext4] "dir_nlink\n"[m
+[m[37m[  0.078843 lwext4_rust::ulibc:30] [32m[lwext4] "%s"[m
+[m[37m[  0.079187 lwext4_rust::ulibc:30] [32m[lwext4] "l: %d   "[m
+[m[37m[  0.079485 lwext4_rust::ulibc:30] [32m[lwext4] "extra_isize\n"[m
+[m[37m[  0.079673 lwext4_rust::ulibc:30] [32m[lwext4] "%s"[m
+[m[37m[  0.079874 lwext4_rust::ulibc:30] [32m[lwext4] "l: %d   "[m
+[m[37m[  0.080135 lwext4_rust::ulibc:30] [32m[lwext4] "metadata_csum\n"[m
+[m[37m[  0.102206 lwext4_rust::blockdev:253] [32mlwext4 mount Okay[m
+[m[37m[  0.102380 lwext4_rust::blockdev:305] [32mls /                               [m
+[m[37m[  0.103138 lwext4_rust::blockdev:314] [32m  [dir] .                                                                                                                                                                                                                                                              [m
+[m[37m[  0.103678 lwext4_rust::blockdev:314] [32m  [dir] ..                                                                                                                                                                                                                                                             [m
+[m[37m[  0.104111 lwext4_rust::blockdev:314] [32m  [dir] lost+found                                                                                                                                                                                                                                                     [m
+[m[37m[  0.104596 lwext4_rust::blockdev:314] [32m  [dir] glibc                                                                                                                                                                                                                                                          [m
+[m[37m[  0.105042 lwext4_rust::blockdev:314] [32m  [dir] musl                                                                                                                                                                                                                                                           [m
+[m[37m[  0.105526 lwext4_rust::blockdev:323] [32m[m
+[m[37m[  0.105694 lwext4_rust::blockdev:342] [32m********************[m
+[m[37m[  0.105835 lwext4_rust::blockdev:343] [32mext4_mount_point_stats[m
+[m[37m[  0.105958 lwext4_rust::blockdev:344] [32minodes_count = 8000[m
+[m[37m[  0.106112 lwext4_rust::blockdev:345] [32mfree_inodes_count = 7eb5[m
+[m[37m[  0.106246 lwext4_rust::blockdev:346] [32mblocks_count = 20000[m
+[m[37m[  0.106381 lwext4_rust::blockdev:347] [32mfree_blocks_count = 16c29[m
+[m[37m[  0.106533 lwext4_rust::blockdev:348] [32mblock_size = 400[m
+[m[37m[  0.106674 lwext4_rust::blockdev:349] [32mblock_group_count = 10[m
+[m[37m[  0.106812 lwext4_rust::blockdev:350] [32mblocks_per_group= 2000[m
+[m[37m[  0.106937 lwext4_rust::blockdev:351] [32minodes_per_group = 800[m
+[m[37m[  0.107103 lwext4_rust::blockdev:354] [32mvolume_name = ""[m
+[m[37m[  0.107238 lwext4_rust::blockdev:355] [32m********************
+[m
+[m[37m[  0.107364 lwext4_rust::blockdev:362] [32m********************[m
+[m[37m[  0.107506 lwext4_rust::blockdev:363] [32mext4 blockdev stats[m
+[m[37m[  0.107643 lwext4_rust::blockdev:365] [32mbdev->bread_ctr = 8[m
+[m[37m[  0.107781 lwext4_rust::blockdev:366] [32mbdev->bwrite_ctr = 41[m
+[m[37m[  0.107906 lwext4_rust::blockdev:368] [32mbcache->ref_blocks = 15[m
+[m[37m[  0.108050 lwext4_rust::blockdev:369] [32mbcache->max_ref_blocks = 16[m
+[m[37m[  0.108201 lwext4_rust::blockdev:373] [32mbcache->lru_ctr = 61[m
+[m[37m[  0.108318 lwext4_rust::blockdev:375] [32m********************
+[m
+[m[37m[  0.108491 axfs::fs::lwext4_rust:62] [32mFileWrapper new EXT4_DE_DIR /[m
+[m[37m[  0.109153 axfs::fs::lwext4_rust:144] [32mcreate Dir on Ext4fs: /dev[m
+[m[37m[  0.109336 axfs::fs::lwext4_rust:70] [33mpath_deal_with: /dev[m
+[m[37m[  0.109902 axfs::fs::lwext4_rust:91] [32mdealt with full path: /dev[m
+[m[37m[  0.115847 axfs::fs::lwext4_rust:70] [33mpath_deal_with: /dev[m
+[m[37m[  0.115988 axfs::fs::lwext4_rust:91] [32mdealt with full path: /dev[m
+[m[37m[  0.116248 axfs::fs::lwext4_rust:62] [32mFileWrapper new EXT4_DE_DIR /dev[m
+[m[37m[  0.116594 axfs::fs::lwext4_rust:206] [32mGet the parent dir of /dev[m
+[m[37m[  0.116827 axfs::fs::lwext4_rust:62] [32mFileWrapper new EXT4_DE_DIR /[m
+[m[37m[  0.117307 axfs::fs::lwext4_rust:144] [32mcreate Dir on Ext4fs: /tmp[m
+[m[37m[  0.117496 axfs::fs::lwext4_rust:70] [33mpath_deal_with: /tmp[m
+[m[37m[  0.117661 axfs::fs::lwext4_rust:91] [32mdealt with full path: /tmp[m
+[m[37m[  0.120399 axfs::fs::lwext4_rust:70] [33mpath_deal_with: /tmp[m
+[m[37m[  0.120634 axfs::fs::lwext4_rust:91] [32mdealt with full path: /tmp[m
+[m[37m[  0.120852 axfs::fs::lwext4_rust:62] [32mFileWrapper new EXT4_DE_DIR /tmp[m
+[m[37m[  0.121089 axfs::fs::lwext4_rust:206] [32mGet the parent dir of /tmp[m
+[m[37m[  0.121250 axfs::fs::lwext4_rust:62] [32mFileWrapper new EXT4_DE_DIR /[m
+[m[37m[  0.121592 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: sys[m
+[m[37m[  0.121957 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: sys/net[m
+[m[37m[  0.122195 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: net[m
+[m[37m[  0.122422 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: sys/net/core[m
+[m[37m[  0.122585 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: net/core[m
+[m[37m[  0.122778 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: core[m
+[m[37m[  0.122908 axfs_ramfs::dir:121] [36mcreate File at ramfs: sys/net/core/somaxconn[m
+[m[37m[  0.123137 axfs_ramfs::dir:121] [36mcreate File at ramfs: net/core/somaxconn[m
+[m[37m[  0.123402 axfs_ramfs::dir:121] [36mcreate File at ramfs: core/somaxconn[m
+[m[37m[  0.123647 axfs_ramfs::dir:121] [36mcreate File at ramfs: somaxconn[m
+[m[37m[  0.124127 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: sys/vm[m
+[m[37m[  0.124304 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: vm[m
+[m[37m[  0.124529 axfs_ramfs::dir:121] [36mcreate File at ramfs: sys/vm/overcommit_memory[m
+[m[37m[  0.124714 axfs_ramfs::dir:121] [36mcreate File at ramfs: vm/overcommit_memory[m
+[m[37m[  0.124866 axfs_ramfs::dir:121] [36mcreate File at ramfs: overcommit_memory[m
+[m[37m[  0.125199 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: self[m
+[m[37m[  0.125462 axfs_ramfs::dir:121] [36mcreate File at ramfs: self/stat[m
+[m[37m[  0.125657 axfs_ramfs::dir:121] [36mcreate File at ramfs: stat[m
+[m[37m[  0.125853 axfs::fs::lwext4_rust:144] [32mcreate Dir on Ext4fs: /proc[m
+[m[37m[  0.126024 axfs::fs::lwext4_rust:70] [33mpath_deal_with: /proc[m
+[m[37m[  0.126183 axfs::fs::lwext4_rust:91] [32mdealt with full path: /proc[m
+[m[37m[  0.128404 axfs::fs::lwext4_rust:70] [33mpath_deal_with: /proc[m
+[m[37m[  0.128582 axfs::fs::lwext4_rust:91] [32mdealt with full path: /proc[m
+[m[37m[  0.128788 axfs::fs::lwext4_rust:62] [32mFileWrapper new EXT4_DE_DIR /proc[m
+[m[37m[  0.128967 axfs::fs::lwext4_rust:206] [32mGet the parent dir of /proc[m
+[m[37m[  0.129177 axfs::fs::lwext4_rust:62] [32mFileWrapper new EXT4_DE_DIR /[m
+[m[37m[  0.129433 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: kernel[m
+[m[37m[  0.129610 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: kernel/mm[m
+[m[37m[  0.129816 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: mm[m
+[m[37m[  0.129960 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: kernel/mm/transparent_hugepage[m
+[m[37m[  0.130196 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: mm/transparent_hugepage[m
+[m[37m[  0.130353 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: transparent_hugepage[m
+[m[37m[  0.130515 axfs_ramfs::dir:121] [36mcreate File at ramfs: kernel/mm/transparent_hugepage/enabled[m
+[m[37m[  0.130676 axfs_ramfs::dir:121] [36mcreate File at ramfs: mm/transparent_hugepage/enabled[m
+[m[37m[  0.130863 axfs_ramfs::dir:121] [36mcreate File at ramfs: transparent_hugepage/enabled[m
+[m[37m[  0.131088 axfs_ramfs::dir:121] [36mcreate File at ramfs: enabled[m
+[m[37m[  0.131270 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: devices[m
+[m[37m[  0.131493 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: devices/system[m
+[m[37m[  0.131712 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: system[m
+[m[37m[  0.131975 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: devices/system/clocksource[m
+[m[37m[  0.132126 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: system/clocksource[m
+[m[37m[  0.132464 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: clocksource[m
+[m[37m[  0.132726 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: devices/system/clocksource/clocksource0[m
+[m[37m[  0.133020 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: system/clocksource/clocksource0[m
+[m[37m[  0.133216 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: clocksource/clocksource0[m
+[m[37m[  0.133368 axfs_ramfs::dir:121] [36mcreate Dir at ramfs: clocksource0[m
+[m[37m[  0.133519 axfs_ramfs::dir:121] [36mcreate File at ramfs: devices/system/clocksource/clocksource0/current_clocksource[m
+[m[37m[  0.133773 axfs_ramfs::dir:121] [36mcreate File at ramfs: system/clocksource/clocksource0/current_clocksource[m
+[m[37m[  0.133988 axfs_ramfs::dir:121] [36mcreate File at ramfs: clocksource/clocksource0/current_clocksource[m
+[m[37m[  0.134168 axfs_ramfs::dir:121] [36mcreate File at ramfs: clocksource0/current_clocksource[m
+[m[37m[  0.134330 axfs_ramfs::dir:121] [36mcreate File at ramfs: current_clocksource[m
+[m[37m[  0.134585 axfs::fs::lwext4_rust:144] [32mcreate Dir on Ext4fs: /sys[m
+[m[37m[  0.134730 axfs::fs::lwext4_rust:70] [33mpath_deal_with: /sys[m
+[m[37m[  0.134857 axfs::fs::lwext4_rust:91] [32mdealt with full path: /sys[m
+[m[37m[  0.137520 axfs::fs::lwext4_rust:70] [33mpath_deal_with: /sys[m
+[m[37m[  0.137658 axfs::fs::lwext4_rust:91] [32mdealt with full path: /sys[m
+[m[37m[  0.137810 axfs::fs::lwext4_rust:62] [32mFileWrapper new EXT4_DE_DIR /sys[m
+[m[37m[  0.137934 axfs::fs::lwext4_rust:206] [32mGet the parent dir of /sys[m
+[m[37m[  0.138052 axfs::fs::lwext4_rust:62] [32mFileWrapper new EXT4_DE_DIR /[m
+[m[37m[  0.138237 axfs::root:209] [32mrootfs initialized[m
+[m[37m[  0.138448 axfs::root:211] [32mtest[m
+[m[37m[  0.138606 axnet:42] [32mInitialize network subsystem...[m
+[m[37m[  0.138866 axnet:45] [32m  use NIC 0: "virtio-net"[m
+[m[37m[  0.139430 axalloc:118] [36mexpand heap memory: [0xffff800000495000, 0xffff800000895000)[m
+[m[37m[  0.141100 axnet::smoltcp_impl:332] [32mcreated net interface "eth0":[m
+[m[37m[  0.141281 axnet::smoltcp_impl:333] [32m  ether:    52-54-00-12-34-56[m
+[m[37m[  0.141565 axnet::smoltcp_impl:334] [32m  ip:       10.0.2.15/24[m
+[m[37m[  0.141926 axnet::smoltcp_impl:335] [32m  gateway:  10.0.2.2[m
+[m[37m[  0.142171 axruntime:176] [32mInitialize interrupt handlers...[m
+[m[37m[  0.143061 axruntime:188] [32mPrimary CPU 0 init OK.[m
+[m[37m[  0.145195 0:2 axfs::root:99] [36mlookup at root: /musl/[m
+[m[37m[  0.146042 0:2 axfs::fs::lwext4_rust:91] [32mdealt with full path: /musl[m
+[m[37m[  0.149106 0:2 axfs::fs::lwext4_rust:62] [32mFileWrapper new EXT4_DE_DIR /musl[m
+[m[37m[  0.149680 0:2 axfs::fs::lwext4_rust:132] [32mget_attr of Dir "/musl", size: 0, blocks: 0[m
+[m[37m[  0.150133 0:2 axfs::fs::lwext4_rust:132] [32mget_attr of Dir "/musl", size: 0, blocks: 0[m
+[m[37m[  0.150399 0:2 axfs::fops:155] [36mopen file: /musl/runtest.exe READ[m
+[m[37m[  0.150714 0:2 axfs::root:99] [36mlookup at root: /musl/runtest.exe[m
+[m[37m[  0.150921 0:2 axfs::fs::lwext4_rust:91] [32mdealt with full path: /musl/runtest.exe[m
+[m[37m[  0.153258 0:2 axfs::fs::lwext4_rust:62] [32mFileWrapper new EXT4_DE_REG_FILE /musl/runtest.exe[m
+[m[37m[  0.154399 0:2 axfs::fs::lwext4_rust:132] [32mget_attr of File "/musl/runtest.exe", size: 42424, blocks: 83[m
+[m[37m[  0.155000 0:2 axfs::fs::lwext4_rust:132] [32mget_attr of File "/musl/runtest.exe", size: 42424, blocks: 83[m
+[m[37m[  0.155358 0:2 axfs::fs::lwext4_rust:132] [32mget_attr of File "/musl/runtest.exe", size: 42424, blocks: 83[m
+[m[37m[  0.160915 0:2 starry_core::mm:52] [36mMapping ELF segment: [VA:0x400000, VA:0x4094ec) flags: READ | EXECUTE | USER[m
+[m[37m[  0.162088 0:2 axmm::backend::alloc:35] [36mmap_alloc: [VA:0x400000, VA:0x40a000) READ | EXECUTE | USER (populate=true)[m
+[m[37m[  0.163023 0:2 starry_core::mm:52] [36mMapping ELF segment: [VA:0x40ae90, VA:0x40ba58) flags: READ | WRITE | USER[m
+[m[37m[  0.163428 0:2 axmm::backend::alloc:35] [36mmap_alloc: [VA:0x40a000, VA:0x40c000) READ | WRITE | USER (populate=true)[m
+[m[37m[  0.163994 0:2 starry_core::mm:143] [36mMapping user stack: VA:0x7ffeffff0000 -> VA:0x7fff00000000[m
+[m[37m[  0.164702 0:2 axmm::backend::alloc:35] [36mmap_alloc: [VA:0x7ffeffff0000, VA:0x7fff00000000) READ | WRITE | USER (populate=true)[m
+[m[37m[  0.165294 0:2 axmm::backend::alloc:35] [36mmap_alloc: [VA:0x40000000, VA:0x40010000) READ | WRITE | USER (populate=true)[m
+[m[37m[  0.166176 0:2 axtask::task:115] [36mnew task: Task(4, "runtest.exe")[m
+[m[37m[  0.167659 0:2 axtask::run_queue:234] [36mtask add: Task(4, "runtest.exe") on run_queue 0[m
+[m[37m[  0.168199 0:2 axtask::run_queue:418] [36mtask block: Task(2, "main")[m
+[m[37m[  0.168707 0:3 axtask::run_queue:418] [36mtask block: Task(3, "gc")[m
+[m[37m[  0.169054 0:4 starry_core::task:46] [32mEnter user space: entry=0x4004ed, ustack=0x7ffefffffe68, kstack=VA:0xffff800000855030[m
+[m[37m[  0.169658 0:4 starry::syscall:13] [32mSyscall arch_prctl[m
+[m[37m[  0.169943 0:4 starry_api::imp::task::thread:72] [36msys_arch_prctl: code = SetFs, addr = 0x40b8d8[m
+[m[37m[  0.170300 0:4 starry_api::imp::task::thread:63] [36msys_arch_prctl => Ok(0)[m
+[m[37m[  0.170801 0:4 starry::syscall:151] [32mSyscall arch_prctl return 0[m
+[m[37m[  0.171081 0:4 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.171433 0:4 starry::syscall:13] [32mSyscall set_tid_address[m
+[m[37m[  0.171763 0:4 starry_api::imp::task::thread:53] [36msys_set_tid_address => Ok(4)[m
+[m[37m[  0.172005 0:4 starry::syscall:151] [32mSyscall set_tid_address return 4[m
+[m[37m[  0.172217 0:4 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.172467 0:4 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.173065 0:4 starry::syscall:13] [32mSyscall rt_sigprocmask[m
+[m[37m[  0.173292 0:4 starry_api::imp::signal:21] [33msys_rt_sigprocmask: not implemented[m
+[m[37m[  0.173548 0:4 starry::syscall:151] [32mSyscall rt_sigprocmask return 0[m
+[m[37m[  0.173721 0:4 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.173982 0:4 starry::syscall:13] [32mSyscall rt_sigprocmask[m
+[m[37m[  0.174146 0:4 starry_api::imp::signal:21] [33msys_rt_sigprocmask: not implemented[m
+[m[37m[  0.174365 0:4 starry::syscall:151] [32mSyscall rt_sigprocmask return 0[m
+[m[37m[  0.174580 0:4 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.174839 0:4 starry::syscall:13] [32mSyscall rt_sigaction[m
+[m[37m[  0.175040 0:4 starry_api::imp::signal:32] [33msys_rt_sigaction: not implemented[m
+[m[37m[  0.175211 0:4 starry::syscall:151] [32mSyscall rt_sigaction return 0[m
+[m[37m[  0.175449 0:4 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.176234 0:4 starry::syscall:13] [32mSyscall write[m
+[m[37m[  0.176666 0:4 arceos_posix_api::imp::io:56] [36msys_write <= 1 0x7ffefffffa90 67[m
+[m========== START entry-static.exe pthread_cancel_points ==========
+[37m[  0.177155 0:4 arceos_posix_api::imp::io:57] [36msys_write => Ok(67)[m
+[m[37m[  0.177465 0:4 starry::syscall:151] [32mSyscall write return 67[m
+[m[37m[  0.177668 0:4 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.177922 0:4 starry::syscall:13] [32mSyscall rt_sigprocmask[m
+[m[37m[  0.178099 0:4 starry_api::imp::signal:21] [33msys_rt_sigprocmask: not implemented[m
+[m[37m[  0.178298 0:4 starry::syscall:151] [32mSyscall rt_sigprocmask return 0[m
+[m[37m[  0.178609 0:4 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.179114 0:4 starry::syscall:13] [32mSyscall rt_sigprocmask[m
+[m[37m[  0.179340 0:4 starry_api::imp::signal:21] [33msys_rt_sigprocmask: not implemented[m
+[m[37m[  0.179584 0:4 starry::syscall:151] [32mSyscall rt_sigprocmask return 0[m
+[m[37m[  0.179800 0:4 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.180076 0:4 starry::syscall:13] [32mSyscall fork[m
+[m[37m[  0.180390 0:4 starry_api::imp::task::clone:94] [32msys_clone <= flags: CloneFlags(0x0), exit_signal: 17, stack: 0x0, ptid: 0x0, ctid: 0x0, tls: 0x0[m
+[m[37m[  0.180884 0:4 axtask::task:115] [36mnew task: Task(5, "runtest.exe")[m
+[m[37m[  0.181615 0:4 axalloc:118] [36mexpand heap memory: [0xffff8000008ca000, 0xffff8000010ca000)[m
+[m[37m[  0.182146 0:4 axmm::backend::alloc:35] [36mmap_alloc: [VA:0x400000, VA:0x40a000) READ | EXECUTE | USER (populate=true)[m
+[m[37m[  0.182654 0:4 axmm::backend::alloc:35] [36mmap_alloc: [VA:0x40a000, VA:0x40c000) READ | WRITE | USER (populate=true)[m
+[m[37m[  0.182983 0:4 axmm::backend::alloc:35] [36mmap_alloc: [VA:0x40000000, VA:0x40010000) READ | WRITE | USER (populate=true)[m
+[m[37m[  0.183410 0:4 axmm::backend::alloc:35] [36mmap_alloc: [VA:0x7ffeffff0000, VA:0x7fff00000000) READ | WRITE | USER (populate=true)[m
+[m[37m[  0.184480 0:4 axtask::run_queue:234] [36mtask add: Task(5, "runtest.exe") on run_queue 0[m
+[m[37m[  0.184748 0:4 starry::syscall:151] [32mSyscall fork return 5[m
+[m[37m[  0.184872 0:4 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.184983 0:4 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.185319 0:4 starry::syscall:13] [32mSyscall rt_sigprocmask[m
+[m[37m[  0.185538 0:4 starry_api::imp::signal:21] [33msys_rt_sigprocmask: not implemented[m
+[m[37m[  0.185788 0:4 starry::syscall:151] [32mSyscall rt_sigprocmask return 0[m
+[m[37m[  0.186007 0:4 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.186228 0:4 starry::syscall:13] [32mSyscall rt_sigprocmask[m
+[m[37m[  0.186462 0:4 starry_api::imp::signal:21] [33msys_rt_sigprocmask: not implemented[m
+[m[37m[  0.186697 0:4 starry::syscall:151] [32mSyscall rt_sigprocmask return 0[m
+[m[37m[  0.186931 0:4 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.187172 0:4 starry::syscall:13] [32mSyscall rt_sigtimedwait[m
+[m[37m[  0.187427 0:4 starry_api::imp::signal:61] [33msys_rt_sigtimedwait: I'm always waiting for you.[m
+[m[37m[  0.187721 0:4 starry::syscall:151] [32mSyscall rt_sigtimedwait return 0[m
+[m[37m[  0.187934 0:4 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.188161 0:4 starry::syscall:13] [32mSyscall wait4[m
+[m[37m[  0.188374 0:4 starry_api::imp::task::wait:64] [32msys_waitpid <= pid: 5, options: WaitOptions(0x0)[m
+[m[37m[  0.189001 0:5 starry_core::task:46] [32mEnter user space: entry=0x404c8e, ustack=0x7ffefffffbe0, kstack=VA:0xffff80000090a010[m
+[m[37m[  0.189383 0:5 starry::syscall:13] [32mSyscall gettid[m
+[m[37m[  0.189593 0:5 starry_api::imp::task::thread:24] [36msys_gettid => Ok(5)[m
+[m[37m[  0.189796 0:5 starry::syscall:151] [32mSyscall gettid return 5[m
+[m[37m[  0.189962 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.190151 0:5 starry::syscall:13] [32mSyscall rt_sigprocmask[m
+[m[37m[  0.190299 0:5 starry_api::imp::signal:21] [33msys_rt_sigprocmask: not implemented[m
+[m[37m[  0.190492 0:5 starry::syscall:151] [32mSyscall rt_sigprocmask return 0[m
+[m[37m[  0.190665 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.190873 0:5 starry::syscall:13] [32mSyscall rt_sigprocmask[m
+[m[37m[  0.191071 0:5 starry_api::imp::signal:21] [33msys_rt_sigprocmask: not implemented[m
+[m[37m[  0.191266 0:5 starry::syscall:151] [32mSyscall rt_sigprocmask return 0[m
+[m[37m[  0.191457 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.191667 0:5 starry::syscall:13] [32mSyscall prlimit64[m
+[m[37m[  0.191865 0:5 starry::syscall:145] [33mUnimplemented syscall: prlimit64[m
+[m[37m[  0.192040 0:5 starry::syscall:151] [32mSyscall prlimit64 return -38[m
+[m[37m[  0.192218 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.192395 0:5 starry::syscall:13] [32mSyscall getrlimit[m
+[m[37m[  0.192575 0:5 arceos_posix_api::imp::resources:9] [36msys_getrlimit <= 3 0x7ffefffffce0[m
+[m[37m[  0.192803 0:5 arceos_posix_api::imp::resources:10] [36msys_getrlimit => Ok(0)[m
+[m[37m[  0.193221 0:5 starry::syscall:151] [32mSyscall getrlimit return 0[m
+[m[37m[  0.193460 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.193688 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.193960 0:5 starry::syscall:13] [32mSyscall prlimit64[m
+[m[37m[  0.194150 0:5 starry::syscall:145] [33mUnimplemented syscall: prlimit64[m
+[m[37m[  0.194351 0:5 starry::syscall:151] [32mSyscall prlimit64 return -38[m
+[m[37m[  0.194544 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.194770 0:5 starry::syscall:13] [32mSyscall rt_sigprocmask[m
+[m[37m[  0.194947 0:5 starry_api::imp::signal:21] [33msys_rt_sigprocmask: not implemented[m
+[m[37m[  0.195171 0:5 starry::syscall:151] [32mSyscall rt_sigprocmask return 0[m
+[m[37m[  0.195377 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.195586 0:5 starry::syscall:13] [32mSyscall rt_sigprocmask[m
+[m[37m[  0.195776 0:5 starry_api::imp::signal:21] [33msys_rt_sigprocmask: not implemented[m
+[m[37m[  0.195994 0:5 starry::syscall:151] [32mSyscall rt_sigprocmask return 0[m
+[m[37m[  0.196188 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.196506 0:5 starry::syscall:13] [32mSyscall setrlimit[m
+[m[37m[  0.196690 0:5 arceos_posix_api::imp::resources:40] [36msys_setrlimit <= 3 0x7ffefffffce0[m
+[m[37m[  0.196914 0:5 arceos_posix_api::imp::resources:41] [36msys_setrlimit => Ok(0)[m
+[m[37m[  0.197130 0:5 starry::syscall:151] [32mSyscall setrlimit return 0[m
+[m[37m[  0.197280 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.197542 0:5 starry::syscall:13] [32mSyscall rt_sigprocmask[m
+[m[37m[  0.197736 0:5 starry_api::imp::signal:21] [33msys_rt_sigprocmask: not implemented[m
+[m[37m[  0.197971 0:5 starry::syscall:151] [32mSyscall rt_sigprocmask return 0[m
+[m[37m[  0.198178 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.198439 0:5 starry::syscall:13] [32mSyscall execve[m
+[m[37m[  0.198975 0:5 starry_api::imp::task::execve:39] [32msys_execve: path: "entry-static.exe", args: ["entry-static.exe", "pthread_cancel_points"], envs: [][m
+[m[37m[  0.199795 0:5 axmm::backend::alloc:65] [36munmap_alloc: [VA:0x400000, VA:0x40a000)[m
+[m[37m[  0.200207 0:5 axmm::backend::alloc:65] [36munmap_alloc: [VA:0x40a000, VA:0x40c000)[m
+[m[37m[  0.200406 0:5 axmm::backend::alloc:65] [36munmap_alloc: [VA:0x40000000, VA:0x40010000)[m
+[m[37m[  0.200611 0:5 axmm::backend::alloc:65] [36munmap_alloc: [VA:0x7ffeffff0000, VA:0x7fff00000000)[m
+[m[37m[  0.200921 0:5 axfs::fops:155] [36mopen file: entry-static.exe READ[m
+[m[37m[  0.201151 0:5 axfs::fs::lwext4_rust:91] [32mdealt with full path: /musl/entry-static.exe[m
+[m[37m[  0.202047 0:5 axfs::fs::lwext4_rust:62] [32mFileWrapper new EXT4_DE_REG_FILE /musl/entry-static.exe[m
+[m[37m[  0.202840 0:5 axfs::fs::lwext4_rust:132] [32mget_attr of File "/musl/entry-static.exe", size: 560432, blocks: 1095[m
+[m[37m[  0.203343 0:5 axfs::fs::lwext4_rust:132] [32mget_attr of File "/musl/entry-static.exe", size: 560432, blocks: 1095[m
+[m[37m[  0.203809 0:5 axfs::fs::lwext4_rust:132] [32mget_attr of File "/musl/entry-static.exe", size: 560432, blocks: 1095[m
+[m[37m[  0.259160 0:5 starry_core::mm:52] [36mMapping ELF segment: [VA:0x400000, VA:0x484fb8) flags: READ | EXECUTE | USER[m
+[m[37m[  0.259907 0:5 axmm::backend::alloc:35] [36mmap_alloc: [VA:0x400000, VA:0x485000) READ | EXECUTE | USER (populate=true)[m
+[m[37m[  0.266542 0:5 starry_core::mm:52] [36mMapping ELF segment: [VA:0x485cf0, VA:0x48dcc0) flags: READ | WRITE | USER[m
+[m[37m[  0.267139 0:5 axmm::backend::alloc:35] [36mmap_alloc: [VA:0x485000, VA:0x48e000) READ | WRITE | USER (populate=true)[m
+[m[37m[  0.267777 0:5 starry_core::mm:143] [36mMapping user stack: VA:0x7ffeffff0000 -> VA:0x7fff00000000[m
+[m[37m[  0.268125 0:5 axmm::backend::alloc:35] [36mmap_alloc: [VA:0x7ffeffff0000, VA:0x7fff00000000) READ | WRITE | USER (populate=true)[m
+[m[37m[  0.268729 0:5 axmm::backend::alloc:35] [36mmap_alloc: [VA:0x40000000, VA:0x40010000) READ | WRITE | USER (populate=true)[m
+[m[37m[  0.269608 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.270182 0:5 starry::syscall:13] [32mSyscall arch_prctl[m
+[m[37m[  0.270427 0:5 starry_api::imp::task::thread:72] [36msys_arch_prctl: code = SetFs, addr = 0x48db70[m
+[m[37m[  0.270773 0:5 starry_api::imp::task::thread:63] [36msys_arch_prctl => Ok(0)[m
+[m[37m[  0.271047 0:5 starry::syscall:151] [32mSyscall arch_prctl return 0[m
+[m[37m[  0.271567 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.271914 0:5 starry::syscall:13] [32mSyscall set_tid_address[m
+[m[37m[  0.272182 0:5 starry_api::imp::task::thread:53] [36msys_set_tid_address => Ok(5)[m
+[m[37m[  0.272546 0:5 starry::syscall:151] [32mSyscall set_tid_address return 5[m
+[m[37m[  0.272931 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.273519 0:5 starry::syscall:13] [32mSyscall rt_sigprocmask[m
+[m[37m[  0.273840 0:5 starry_api::imp::signal:21] [33msys_rt_sigprocmask: not implemented[m
+[m[37m[  0.274342 0:5 starry::syscall:151] [32mSyscall rt_sigprocmask return 0[m
+[m[37m[  0.274697 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.274898 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.275307 0:5 starry::syscall:13] [32mSyscall mmap[m
+[m[37m[  0.276128 0:5 starry_api::imp::mm::mmap:100] [32mmmap: addr: 0x0, length: 23000, prot: MmapProt(0x0), flags: MmapFlags(MAP_PRIVATE | MAP_ANONYMOUS), fd: -1, offset: 0[m
+[m[37m[  0.276895 0:5 axmm::backend::alloc:35] [36mmap_alloc: [VA:0x1000, VA:0x24000) USER (populate=false)[m
+[m[37m[  0.277138 0:5 starry_api::imp::mm::mmap:69] [36msys_mmap => Ok(4096)[m
+[m[37m[  0.277321 0:5 starry::syscall:151] [32mSyscall mmap return 4096[m
+[m[37m[  0.277453 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.277597 0:5 starry::syscall:13] [32mSyscall mprotect[m
+[m[37m[  0.278496 0:5 starry_api::imp::mm::mmap:175] [36msys_mprotect => Ok(0)[m
+[m[37m[  0.278667 0:5 starry::syscall:151] [32mSyscall mprotect return 0[m
+[m[37m[  0.278793 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.278973 0:5 starry::syscall:13] [32mSyscall rt_sigprocmask[m
+[m[37m[  0.279101 0:5 starry_api::imp::signal:21] [33msys_rt_sigprocmask: not implemented[m
+[m[37m[  0.279235 0:5 starry::syscall:151] [32mSyscall rt_sigprocmask return 0[m
+[m[37m[  0.279355 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.279512 0:5 starry::syscall:13] [32mSyscall clone[m
+[m[37m[  0.279633 0:5 starry_api::imp::task::clone:94] [32msys_clone <= flags: CloneFlags(VM | FS | FILES | SIGHAND | THREAD | SYSVSEM | SETTLS | PARENT_SETTID | CHILD_CLEARTID), exit_signal: 0, stack: 0x23ad8, ptid: 0x23b68, ctid: 0x48dc90, tls: 0x23b38[m
+[m[37m[  0.280146 0:5 axtask::task:115] [36mnew task: Task(6, "entry-static.exe")[m
+[m[37m[  0.280430 0:5 axtask::run_queue:234] [36mtask add: Task(6, "entry-static.exe") on run_queue 0[m
+[m[37m[  0.280588 0:5 starry::syscall:151] [32mSyscall clone return 6[m
+[m[37m[  0.280700 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.280833 0:5 starry::syscall:13] [32mSyscall rt_sigprocmask[m
+[m[37m[  0.280943 0:5 starry_api::imp::signal:21] [33msys_rt_sigprocmask: not implemented[m
+[m[37m[  0.281105 0:5 starry::syscall:151] [32mSyscall rt_sigprocmask return 0[m
+[m[37m[  0.281222 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.281443 0:5 starry::syscall:13] [32mSyscall rt_sigaction[m
+[m[37m[  0.281557 0:5 starry_api::imp::signal:32] [33msys_rt_sigaction: not implemented[m
+[m[37m[  0.281813 0:5 starry::syscall:151] [32mSyscall rt_sigaction return 0[m
+[m[37m[  0.282024 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.282331 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.282575 0:5 starry::syscall:13] [32mSyscall rt_sigprocmask[m
+[m[37m[  0.282789 0:5 starry_api::imp::signal:21] [33msys_rt_sigprocmask: not implemented[m
+[m[37m[  0.283104 0:5 starry::syscall:151] [32mSyscall rt_sigprocmask return 0[m
+[m[37m[  0.283293 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.283497 0:5 starry::syscall:13] [32mSyscall tkill[m
+[m[37m[  0.283845 0:5 starry::syscall:151] [32mSyscall tkill return 0[m
+[m[37m[  0.284030 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.284199 0:5 starry::syscall:13] [32mSyscall rt_sigprocmask[m
+[m[37m[  0.284418 0:5 starry_api::imp::signal:21] [33msys_rt_sigprocmask: not implemented[m
+[m[37m[  0.284653 0:5 starry::syscall:151] [32mSyscall rt_sigprocmask return 0[m
+[m[37m[  0.284862 0:5 starry_core::signal:311] [32mHandle signals.[m
+[m[37m[  0.285168 0:5 starry::syscall:13] [32mSyscall futex[m
+[m[37m[  0.285345 0:5 axruntime::lang_items:5] [31mpanicked at api/src/imp/signal.rs:45:5:
+not implemented: 😅: sys_futex[m
+[m[37m[  0.285802 0:5 axhal::platform::x86_pc::misc:7] [32mShutting down...[m
+[mmake[2]: Leaving directory '/home/amiriox/oscomp/.arceos'
+make[1]: Leaving directory '/home/amiriox/oscomp'

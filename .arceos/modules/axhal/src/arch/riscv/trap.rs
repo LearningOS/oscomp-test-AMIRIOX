@@ -60,6 +60,7 @@ fn riscv_trap_handler(tf: &mut TrapFrame, from_user: bool) {
                 panic!("Unhandled trap {:?} @ {:#x}:\n{:#x?}", cause, tf.sepc, tf);
             }
         }
+        crate::trap::post_trap_callback(tf, true);
     } else {
         panic!(
             "Unknown trap {:?} @ {:#x}:\n{:#x?}",

@@ -7,6 +7,7 @@ use core::{
 };
 
 use alloc::{
+    collections::VecDeque,
     string::String,
     sync::{Arc, Weak},
 };
@@ -23,6 +24,10 @@ use memory_addr::VirtAddrRange;
 use spin::{Once, RwLock};
 use weak_map::WeakMap;
 
+use axsync::spin::SpinNoIrq;
+
+#[macro_use]
+use super::signal::{Signal, SigMask, SignalAction};
 use crate::time::TimeStat;
 
 /// Create a new user task.
@@ -37,7 +42,6 @@ pub fn new_user_task(
             if let Some(tid) = set_child_tid {
                 *tid = curr.id().as_u64() as Pid;
             }
-
             let kstack_top = curr.kernel_stack_top().unwrap();
             info!(
                 "Enter user space: entry={:#x}, ustack={:#x}, kstack={:#x}",
@@ -130,6 +134,13 @@ pub struct ThreadData {
     ///
     /// When the thread exits, the kernel clears the word at this address if it is not NULL.
     pub clear_child_tid: AtomicUsize,
+
+    /// Pending signals
+    pub pending: SpinNoIrq<VecDeque<Signal>>,
+    /// Blocked signals
+    pub blocked: SigMask,
+    /// Saved signals
+    pub saved: SigMask,
 }
 
 impl ThreadData {
@@ -138,6 +149,9 @@ impl ThreadData {
     pub fn new() -> Self {
         Self {
             clear_child_tid: AtomicUsize::new(0),
+            pending: SpinNoIrq::new(VecDeque::new()),
+            blocked: SigMask::empty(),
+            saved: SigMask::empty(),
         }
     }
 
@@ -159,7 +173,10 @@ pub struct ProcessData {
     pub exe_path: RwLock<String>,
     /// The virtual memory address space.
     pub aspace: Arc<Mutex<AddrSpace>>,
+    /// Shared pending signals
+    pub shared: SpinNoIrq<VecDeque<Signal>>,
     /// The resource namespace
+    pub actions: Mutex<[SignalAction; 32]>,
     pub ns: AxNamespace,
     /// The user heap bottom
     heap_bottom: AtomicUsize,
@@ -174,6 +191,8 @@ impl ProcessData {
             exe_path: RwLock::new(exe_path),
             aspace,
             ns: AxNamespace::new_thread_local(),
+            shared: SpinNoIrq::new(VecDeque::new()),
+            actions: Mutex::default(),
             heap_bottom: AtomicUsize::new(axconfig::plat::USER_HEAP_BASE),
             heap_top: AtomicUsize::new(axconfig::plat::USER_HEAP_BASE),
         }
@@ -235,8 +254,9 @@ impl AxNamespaceIf for AxNamespaceImpl {
     }
 }
 
-static THREAD_TABLE: RwLock<WeakMap<Pid, Weak<Thread>>> = RwLock::new(WeakMap::new());
-static PROCESS_TABLE: RwLock<WeakMap<Pid, Weak<Process>>> = RwLock::new(WeakMap::new());
+pub static THREAD_TABLE: RwLock<WeakMap<Pid, Weak<Thread>>> = RwLock::new(WeakMap::new());
+pub static PROCESS_TABLE: RwLock<WeakMap<Pid, Weak<Process>>> = RwLock::new(WeakMap::new());
+// pub static TASK_TABLE: RwLock<WeakMap<Pid, Weak<crate::task::TaskInner>>> = RwLock::new(WeakMap::new());
 static PROCESS_GROUP_TABLE: RwLock<WeakMap<Pid, Weak<ProcessGroup>>> = RwLock::new(WeakMap::new());
 static SESSION_TABLE: RwLock<WeakMap<Pid, Weak<Session>>> = RwLock::new(WeakMap::new());
 
