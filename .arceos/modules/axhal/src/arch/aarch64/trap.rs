@@ -32,6 +32,12 @@ enum TrapSource {
     LowerAArch32 = 3,
 }
 
+impl TrapSource {
+    fn is_from_user(&self) -> bool {
+        matches!(self, TrapSource::LowerAArch64 | TrapSource::LowerAArch32)
+    }
+}
+
 #[unsafe(no_mangle)]
 fn invalid_exception(tf: &TrapFrame, kind: TrapKind, source: TrapSource) {
     panic!(
@@ -41,9 +47,9 @@ fn invalid_exception(tf: &TrapFrame, kind: TrapKind, source: TrapSource) {
 }
 
 #[unsafe(no_mangle)]
-fn handle_irq_exception(tf: &TrapFrame) {
+fn handle_irq_exception(tf: &mut TrapFrame, source: TrapSource) {
     handle_trap!(IRQ, 0);
-    crate::trap::post_trap_callback(tf, true);
+    crate::trap::post_trap_callback(tf, source.is_from_user());
 }
 
 fn handle_instruction_abort(tf: &TrapFrame, iss: u64, is_user: bool) {
@@ -99,7 +105,7 @@ fn handle_data_abort(tf: &TrapFrame, iss: u64, is_user: bool) {
 }
 
 #[unsafe(no_mangle)]
-fn handle_sync_exception(tf: &mut TrapFrame) {
+fn handle_sync_exception(tf: &mut TrapFrame, source: TrapSource) {
     let esr = ESR_EL1.extract();
     let iss = esr.read(ESR_EL1::ISS);
     match esr.read_as_enum(ESR_EL1::EC) {
@@ -125,5 +131,5 @@ fn handle_sync_exception(tf: &mut TrapFrame) {
             );
         }
     }
-    crate::trap::post_trap_callback(tf, tf.is_user());
+    crate::trap::post_trap_callback(tf, source.is_from_user());
 }
