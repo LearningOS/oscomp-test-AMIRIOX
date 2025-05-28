@@ -1,7 +1,7 @@
 use core::ffi::{c_int, c_void};
 
-use axerrno::LinuxResult;
-use axtask::{TaskExtRef, current};
+use axerrno::{LinuxError, LinuxResult};
+use axtask::{TaskExtRef, current, futex_sleep, futex_wake};
 
 use crate::ptr::{PtrWrapper, UserConstPtr, UserPtr};
 
@@ -33,7 +33,9 @@ pub fn sys_rt_sigaction(
     Ok(0)
 }
 
-// TODO
+const FUTEX_WAIT: c_int = 0;
+const FUTEX_WAKE: c_int = 1;
+
 pub fn sys_futex(
     uaddr: UserPtr<i32>,
     futex_op: c_int,
@@ -42,8 +44,16 @@ pub fn sys_futex(
     uaddr2: UserPtr<i32>,
     val3: c_int,
 ) -> LinuxResult<isize> {
-    //unimplemented!("😅: sys_futex");
-    Ok(0)
+    let futex_key_ptr: *mut i32 = uaddr.get().unwrap();
+    let futex_key = unsafe { *futex_key_ptr };
+    if futex_op == FUTEX_WAIT {
+        futex_sleep(futex_key);
+        Ok(0)
+    } else if futex_op == FUTEX_WAKE {
+        Ok(futex_wake(futex_key) as isize)
+    } else {
+        Err(LinuxError::EINVAL)
+    }
 }
 
 pub fn sys_rt_kill(pid: c_int, sig: c_int) -> LinuxResult<isize> {

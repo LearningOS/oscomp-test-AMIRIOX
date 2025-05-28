@@ -19,18 +19,19 @@ use crate::{AxCpuMask, AxTaskRef, Scheduler, TaskInner, WaitQueue};
 macro_rules! percpu_static {
     ($(
         $(#[$comment:meta])*
-        $name:ident: $ty:ty = $init:expr
+        $vis:vis $name:ident: $ty:ty = $init:expr
     ),* $(,)?) => {
         $(
             $(#[$comment])*
             #[percpu::def_percpu]
-            static $name: $ty = $init;
+            $vis static $name: $ty = $init;
         )*
     };
 }
 
 percpu_static! {
     RUN_QUEUE: LazyInit<AxRunQueue> = LazyInit::new(),
+    // pub FUTEX_WAIT_QUEUE: LazyInit<AxRunQueue> = LazyInit::new(),
     EXITED_TASKS: VecDeque<AxTaskRef> = VecDeque::new(),
     WAIT_FOR_EXIT: WaitQueue = WaitQueue::new(),
     IDLE_TASK: LazyInit<AxTaskRef> = LazyInit::new(),
@@ -52,6 +53,10 @@ static mut RUN_QUEUES: [MaybeUninit<&'static mut AxRunQueue>; axconfig::SMP] =
     [ARRAY_REPEAT_VALUE; axconfig::SMP];
 #[allow(clippy::declare_interior_mutable_const)] // It's ok because it's used only for initialization `RUN_QUEUES`.
 const ARRAY_REPEAT_VALUE: MaybeUninit<&'static mut AxRunQueue> = MaybeUninit::uninit();
+
+// Well, it's hard indeed.
+pub static mut FUTEX_WAIT_QUEUE: [MaybeUninit<&'static mut AxRunQueue>; axconfig::SMP] = 
+    [ARRAY_REPEAT_VALUE; axconfig::SMP];
 
 /// Returns a reference to the current run queue in [`CurrentRunQueueRef`].
 ///

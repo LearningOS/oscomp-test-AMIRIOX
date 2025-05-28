@@ -7,7 +7,7 @@ use alloc::{
 
 use kernel_guard::NoPreemptIrqSave;
 
-pub(crate) use crate::run_queue::{current_run_queue, select_run_queue};
+pub(crate) use crate::run_queue::{FUTEX_WAIT_QUEUE, current_run_queue, select_run_queue};
 
 #[doc(cfg(feature = "multitask"))]
 pub use crate::task::{CurrentTask, TaskId, TaskInner};
@@ -222,4 +222,16 @@ pub fn run_idle() -> ! {
         #[cfg(feature = "irq")]
         axhal::arch::wait_for_irqs();
     }
+}
+
+/// TODO futex api
+// really hard :(
+pub fn futex_sleep(futex_key: i32) {
+    let curr = current();
+    curr.as_task_ref();
+    unimplemented!("😅: futex_sleep");
+}
+
+pub fn futex_wake(futex_key: i32) -> u32 {
+    unimplemented!("😅: futex_wake");
 }
