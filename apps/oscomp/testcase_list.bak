@@ -85,6 +85,8 @@
 /musl/runtest.exe -w entry-static.exe swprintf
 /musl/runtest.exe -w entry-static.exe tgmath
 /musl/runtest.exe -w entry-static.exe time
+/musl/runtest.exe -w entry-static.exe tls_align
+/musl/runtest.exe -w entry-static.exe udiv
 
 /musl/runtest.exe -w entry-dynamic.exe argv
 /musl/runtest.exe -w entry-dynamic.exe basename
