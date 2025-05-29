@@ -10,7 +10,7 @@ use axsync::Mutex;
 
 use super::fd_ops::{FileLike, get_file_like};
 use crate::AT_FDCWD;
-use crate::{ctypes, utils::char_ptr_to_str};
+pub use crate::{ctypes, utils::char_ptr_to_str};
 
 /// File wrapper for `axfs::fops::File`.
 pub struct File {
@@ -257,9 +257,20 @@ pub unsafe fn sys_stat(path: *const c_char, buf: *mut ctypes::stat) -> c_int {
         }
         let mut options = OpenOptions::new();
         options.read(true);
-        let file = axfs::fops::File::open(path?, &options)?;
-        let st = File::new(file, path?.to_string()).stat()?;
-        unsafe { *buf = st };
+        match axfs::fops::File::open(path?, &options) {
+            Ok(file) => {
+                let st = File::new(file, path?.to_string()).stat()?;
+                unsafe { *buf = st };
+            }
+            Err(e) => {
+                let dir = Directory::new(
+                    axfs::fops::Directory::open_dir(path?, &options)?,
+                    path?.to_string(),
+                );
+                let st = dir.stat()?;
+                unsafe { *buf = st };
+            }
+        }
         Ok(0)
     })
 }
@@ -370,7 +381,27 @@ impl FileLike for Directory {
     }
 
     fn stat(&self) -> LinuxResult<ctypes::stat> {
-        Err(LinuxError::EBADF)
+        let metadata = self.inner.lock().get_attr()?;
+        // TODO
+
+        // construct mode
+        let ty = metadata.file_type() as u8;
+        let perm = metadata.perm().bits() as u32;
+        let st_mode = ((ty as u32) << 12) | perm;
+
+        // construct id
+        // let st_uid = metadata
+        Ok(ctypes::stat {
+            st_ino: 1,
+            st_nlink: 2,
+            st_mode,
+            st_uid: 1000,
+            st_gid: 1000,
+            st_size: metadata.size() as _,
+            st_blocks: metadata.blocks() as _,
+            st_blksize: 512,
+            ..Default::default()
+        })
     }
 
     fn into_any(self: Arc<Self>) -> Arc<dyn core::any::Any + Send + Sync> {

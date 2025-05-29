@@ -10,9 +10,9 @@ pub fn char_ptr_to_str<'a>(str: *const c_char) -> LinuxResult<&'a str> {
         Err(LinuxError::EFAULT)
     } else {
         let str = str as *const _;
-        unsafe { CStr::from_ptr(str) }
-            .to_str()
-            .map_err(|_| LinuxError::EINVAL)
+        let str = unsafe { CStr::from_ptr(str) };
+        debug!("raw data: {:?}", str.to_bytes());
+        str.to_str().map_err(|_| LinuxError::EINVAL)
     }
 }
 

@@ -376,5 +376,6 @@ fn adjust_path_suffix(mut path: String, force_dir: bool) -> String {
         // 防止路径以 '.' 结尾
         path.push('/');
     }
+    path += "\0";
     path
 }
