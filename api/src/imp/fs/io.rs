@@ -24,6 +24,15 @@ pub fn sys_writev(
     unsafe { Ok(api::sys_writev(fd, iov, iocnt)) }
 }
 
+pub fn sys_readv(
+    fd: i32,
+    iov: UserPtr<api::ctypes::iovec>,
+    iocnt: i32,
+) -> LinuxResult<isize> {
+    let iov = iov.get_as_bytes(iocnt as _)?;
+    unsafe { Ok(api::sys_readv(fd, iov, iocnt)) }
+}
+
 pub fn sys_openat(
     dirfd: i32,
     path: UserConstPtr<c_char>,

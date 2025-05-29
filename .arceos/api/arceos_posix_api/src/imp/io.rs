@@ -88,3 +88,53 @@ pub unsafe fn sys_writev(fd: c_int, iov: *const ctypes::iovec, iocnt: c_int) -> 
         Ok(ret)
     })
 }
+
+fn read_impl(fd: c_int, buf: *mut c_void, count: usize) -> LinuxResult<ctypes::ssize_t> {
+    if buf.is_null() {
+        return Err(LinuxError::EFAULT);
+    }
+    let src = unsafe { core::slice::from_raw_parts_mut(buf as *mut u8, count) };
+    #[cfg(feature = "fd")]
+    {
+        let write_size = get_file_like(fd)?.read(src)? as ctypes::ssize_t;
+        Ok(write_size)
+    }
+    #[cfg(not(feature = "fd"))]
+    match fd {
+        0 => Err(LinuxError::EPERM),
+        1 | 2 => Ok(super::stdio::stdout().read(src)? as ctypes::ssize_t),
+        _ => Err(LinuxError::EBADF),
+    }
+}
+
+/// Read a vector.
+pub unsafe fn sys_readv(fd: c_int, iov: *mut ctypes::iovec, iocnt: c_int) -> ctypes::ssize_t {
+    debug!("sys_readv <= fd: {}", fd);
+    syscall_body!(sys_readv, {
+        if !(0..=1024).contains(&iocnt) {
+            return Err(LinuxError::EINVAL);
+        }
+
+        let iovs = unsafe { core::slice::from_raw_parts_mut(iov, iocnt as usize) };
+        /*
+        for iv in iovs.iter() {
+            ax_println!("base: {:p}, len: {}", iv.iov_base, iv.iov_len);
+        }
+        */
+        let mut ret = 0;
+        for iov in iovs.iter() {
+            if iov.iov_base == 0 as *mut c_void {
+                // TODO: why there's an iovec { base = 0, len = 0 } ? 
+                continue;
+            }
+            let result = read_impl(fd, iov.iov_base, iov.iov_len)?;
+            ret += result;
+
+            if result < iov.iov_len as isize {
+                break;
+            }
+        }
+
+        Ok(ret)
+    })
+}
