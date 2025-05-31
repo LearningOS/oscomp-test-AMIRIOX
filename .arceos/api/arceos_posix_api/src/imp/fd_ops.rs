@@ -72,15 +72,18 @@ pub fn close_file_like(fd: c_int) -> LinuxResult {
 /// Close a file by `fd`.
 pub fn sys_close(fd: c_int) -> c_int {
     debug!("sys_close <= {}", fd);
+    /*
     if (0..=2).contains(&fd) {
         return 0; // stdin, stdout, stderr
     }
+    */
     syscall_body!(sys_close, close_file_like(fd).map(|_| 0))
 }
 
 fn dup_fd(old_fd: c_int) -> LinuxResult<c_int> {
     let f = get_file_like(old_fd)?;
     let new_fd = add_file_like(f)?;
+    debug!("dup old_fd: {} to new_fd: {}", old_fd, new_fd);
     Ok(new_fd)
 }
 

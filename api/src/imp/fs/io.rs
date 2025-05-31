@@ -1,6 +1,7 @@
-use core::ffi::{CStr, c_char, c_void};
+use core::ffi::{CStr, c_char, c_int, c_longlong, c_ulonglong, c_void};
 
-use arceos_posix_api::{self as api, ctypes::mode_t};
+use api::File;
+use arceos_posix_api::{self as api, ctypes::mode_t, ctypes::off_t};
 use axerrno::LinuxResult;
 
 use crate::ptr::{PtrWrapper, UserConstPtr, UserPtr};
@@ -24,11 +25,7 @@ pub fn sys_writev(
     unsafe { Ok(api::sys_writev(fd, iov, iocnt)) }
 }
 
-pub fn sys_readv(
-    fd: i32,
-    iov: UserPtr<api::ctypes::iovec>,
-    iocnt: i32,
-) -> LinuxResult<isize> {
+pub fn sys_readv(fd: i32, iov: UserPtr<api::ctypes::iovec>, iocnt: i32) -> LinuxResult<isize> {
     let iov = iov.get_as_bytes(iocnt as _)?;
     unsafe { Ok(api::sys_readv(fd, iov, iocnt)) }
 }
@@ -60,4 +57,23 @@ pub fn sys_unlink(pathname: UserConstPtr<c_char>) -> LinuxResult<isize> {
     dir.remove_file(file_name);
     // ax_println!("Please don't go💔");
     Ok(0)
+}
+
+pub fn sys_pread64(
+    fd: i32,
+    buf: UserPtr<c_void>,
+    count: usize,
+    offset: off_t,
+) -> LinuxResult<isize> {
+    let buf = buf.get_as_bytes(count)? as *mut u8;
+    if buf.is_null() {
+        return Err(axerrno::LinuxError::EFAULT);
+    }
+    api::sys_pread64(
+        fd,
+        unsafe { core::slice::from_raw_parts_mut(buf, count) },
+        count,
+        offset,
+    );
+    Ok(count as isize)
 }

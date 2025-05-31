@@ -1,3 +1,4 @@
+use super::fs::File;
 use crate::ctypes;
 use axerrno::{LinuxError, LinuxResult};
 use core::ffi::{c_int, c_void};
@@ -74,7 +75,7 @@ pub unsafe fn sys_writev(fd: c_int, iov: *const ctypes::iovec, iocnt: c_int) -> 
         let mut ret = 0;
         for iov in iovs.iter() {
             if iov.iov_base == 0 as *mut c_void {
-                // TODO: why there's an iovec { base = 0, len = 0 } ? 
+                // TODO: why there's an iovec { base = 0, len = 0 } ?
                 continue;
             }
             let result = write_impl(fd, iov.iov_base, iov.iov_len)?;
@@ -124,7 +125,7 @@ pub unsafe fn sys_readv(fd: c_int, iov: *mut ctypes::iovec, iocnt: c_int) -> cty
         let mut ret = 0;
         for iov in iovs.iter() {
             if iov.iov_base == 0 as *mut c_void {
-                // TODO: why there's an iovec { base = 0, len = 0 } ? 
+                // TODO: why there's an iovec { base = 0, len = 0 } ?
                 continue;
             }
             let result = read_impl(fd, iov.iov_base, iov.iov_len)?;
@@ -136,5 +137,17 @@ pub unsafe fn sys_readv(fd: c_int, iov: *mut ctypes::iovec, iocnt: c_int) -> cty
         }
 
         Ok(ret)
+    })
+}
+
+pub fn sys_pread64(fd: i32, dst: &mut [u8], count: usize, offset: ctypes::off_t) -> ctypes::ssize_t {
+    syscall_body!(sys_pread64, {
+        let file = File::from_fd(fd)?;
+        let file = file.inner();
+        let last_offset = file.lock().seek(axio::SeekFrom::Current(0))?;
+        file.lock().seek(axio::SeekFrom::Start(offset as _))?;
+        let ret = file.lock().read(dst)?;
+        file.lock().seek(axio::SeekFrom::Start(last_offset))?;
+        Ok(ret as ctypes::ssize_t)
     })
 }

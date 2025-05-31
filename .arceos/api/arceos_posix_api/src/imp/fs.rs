@@ -30,7 +30,7 @@ impl File {
         super::fd_ops::add_file_like(Arc::new(self))
     }
 
-    fn from_fd(fd: c_int) -> LinuxResult<Arc<Self>> {
+    pub fn from_fd(fd: c_int) -> LinuxResult<Arc<Self>> {
         let f = super::fd_ops::get_file_like(fd)?;
         f.into_any()
             .downcast::<Self>()
@@ -52,6 +52,7 @@ impl FileLike for File {
     fn read(&self, buf: &mut [u8]) -> LinuxResult<usize> {
         Ok(self.inner.lock().read(buf)?)
         /*
+        let ret = self.inner.lock().read(buf)?;
         ax_println!("Read: {} Bytes", ret);
         for &c in &buf[..ret] {
             if c.is_ascii_graphic() || c == b' ' {
@@ -61,6 +62,7 @@ impl FileLike for File {
             }
         }
         ax_println!();
+        Ok(ret)
         */
     }
 

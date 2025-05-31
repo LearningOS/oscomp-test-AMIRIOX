@@ -1,4 +1,3 @@
-/musl/runtest.exe -w entry-static.exe fflush_exit
 /musl/runtest.exe -w entry-static.exe fgetwc_buffering
 /musl/runtest.exe -w entry-static.exe rewind_clear_error
 /musl/runtest.exe -w entry-dynamic.exe tls_get_new_dtv
