@@ -1,12 +1,11 @@
-/musl/runtest.exe -w entry-static.exe fgetwc_buffering
-/musl/runtest.exe -w entry-static.exe rewind_clear_error
-/musl/runtest.exe -w entry-dynamic.exe tls_get_new_dtv
-/musl/runtest.exe -w entry-static.exe rlimit_open_files 
 
+/musl/runtest.exe -w entry-dynamic.exe tls_get_new_dtv  # sys_futex needed
 /musl/runtest.exe -w entry-dynamic.exe pthread_*
 /musl/runtest.exe -w entry-static.exe setjmp
 /musl/runtest.exe -w entry-static.exe socket
 /musl/runtest.exe -w entry-dynamic.exe *stat
 /musl/runtest.exe -w entry-static.exe statvfs
+/musl/runtest.exe -w entry-static.exe utime
 /musl/runtest.exe -w entry-dynamic.exe dlopen
 /musl/runtest.exe -w entry-dynamic.exe socket
+

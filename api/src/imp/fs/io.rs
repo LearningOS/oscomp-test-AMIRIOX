@@ -5,6 +5,10 @@ use arceos_posix_api::{self as api, ctypes::mode_t, ctypes::off_t};
 use axerrno::LinuxResult;
 
 use crate::ptr::{PtrWrapper, UserConstPtr, UserPtr};
+use api::FD_TABLE;
+use axtask::{TaskExtRef, current};
+
+use super::check_fd_limit;
 
 pub fn sys_read(fd: i32, buf: UserPtr<c_void>, count: usize) -> LinuxResult<isize> {
     let buf = buf.get_as_bytes(count)?;
@@ -37,6 +41,7 @@ pub fn sys_openat(
     modes: mode_t,
 ) -> LinuxResult<isize> {
     let path = path.get_as_null_terminated()?;
+    check_fd_limit()?;
     Ok(api::sys_openat(dirfd, path.as_ptr(), flags, modes) as _)
 }
 

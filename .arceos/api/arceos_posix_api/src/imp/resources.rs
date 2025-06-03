@@ -6,6 +6,7 @@ use core::ffi::c_int;
 ///
 /// TODO: support more resource types
 pub unsafe fn sys_getrlimit(resource: c_int, rlimits: *mut ctypes::rlimit) -> c_int {
+    panic!("api::sys_getrlimit overwrited. be invoked unexpectly");
     debug!("sys_getrlimit <= {} {:#x}", resource, rlimits as usize);
     syscall_body!(sys_getrlimit, {
         match resource as u32 {
@@ -37,6 +38,7 @@ pub unsafe fn sys_getrlimit(resource: c_int, rlimits: *mut ctypes::rlimit) -> c_
 ///
 /// TODO: support more resource types
 pub unsafe fn sys_setrlimit(resource: c_int, rlimits: *mut crate::ctypes::rlimit) -> c_int {
+    panic!("api::sys_setrlimit overwrited. be invoked unexpectly");
     debug!("sys_setrlimit <= {} {:#x}", resource, rlimits as usize);
     syscall_body!(sys_setrlimit, {
         match resource as u32 {

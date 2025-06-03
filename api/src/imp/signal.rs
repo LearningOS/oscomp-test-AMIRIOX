@@ -1,7 +1,8 @@
 use core::ffi::{c_int, c_void};
 
 use axerrno::{LinuxError, LinuxResult};
-use axtask::{TaskExtRef, current, futex_sleep, futex_wake};
+use axtask::{TaskExtRef, TaskExtMut, current, futex_sleep, futex_wake};
+use starry_core::task::ProcessData;
 
 use crate::ptr::{PtrWrapper, UserConstPtr, UserPtr};
 
@@ -11,6 +12,9 @@ use arceos_posix_api::ctypes::timespec;
 
 use starry_core::mm::AddrSpace;
 use starry_core::signal::{self, SigMask, Signal};
+
+use api::ctypes;
+use axconfig;
 
 pub fn sys_rt_sigprocmask(
     _how: i32,
@@ -73,18 +77,68 @@ pub fn sys_rt_sigtimedwait() -> LinuxResult<isize> {
     Ok(0)
 }
 
+/// Get resource limitations
+///
+/// TODO: support more resource types
+pub unsafe fn sys_getrlimit(resource: c_int, rlimits: *mut ctypes::rlimit) -> c_int {
+    debug!("sys_getrlimit <= {} {:#x}", resource, rlimits as usize);
+    match resource as u32 {
+        ctypes::RLIMIT_DATA => {}
+        ctypes::RLIMIT_STACK => {}
+        ctypes::RLIMIT_NOFILE => {}
+        _ => return LinuxError::EINVAL as _,
+    }
+    if rlimits.is_null() {
+        return 0;
+    }
+    match resource as u32 {
+        ctypes::RLIMIT_STACK => unsafe {
+            (*rlimits).rlim_cur = axconfig::TASK_STACK_SIZE as _;
+            (*rlimits).rlim_max = axconfig::TASK_STACK_SIZE as _;
+        },
+        //#[cfg(feature = "fd")]
+        ctypes::RLIMIT_NOFILE => unsafe {
+            let curr = axtask::current();
+            let data = curr.task_ext().process_data();
+            (*rlimits) = *data.fd_limit.lock();
+            debug!("got rlimits: {} / {}", (*rlimits).rlim_cur, (*rlimits).rlim_max);
+        },
+        _ => {}
+    }
+    0
+}
+
+/// Set resource limitations
+///
+/// TODO: support more resource types
+pub unsafe fn sys_setrlimit(resource: c_int, rlimits: *mut ctypes::rlimit) -> c_int {
+    debug!("sys_setrlimit <= {} {:#x}", resource, rlimits as usize);
+    let rlimits = unsafe { rlimits.read() };
+
+    // TODO: check permission
+    // assert!(rlimits.rlim_cur < rlimits.rlim_max);
+    match resource as u32 {
+        ctypes::RLIMIT_DATA => {}
+        ctypes::RLIMIT_STACK => {}
+        ctypes::RLIMIT_NOFILE => {
+            let curr = axtask::current();
+            let data: &ProcessData = curr.task_ext().process_data();
+            {
+                // 限制锁范围
+                let mut fd_limit_guard = data.fd_limit.lock();
+                *fd_limit_guard = rlimits;
+                debug!("changed fd_limit: {} / {}", fd_limit_guard.rlim_cur, fd_limit_guard.rlim_max);
+            }
+        }
+        _ => return LinuxError::EINVAL as _,
+    }
+    // Currently do not support set resources
+    0
+}
 pub fn sys_rt_getrlimit(resource: c_int, rlimits: UserPtr<rlimit>) -> LinuxResult<isize> {
-    Ok(unsafe {
-        api::sys_getrlimit(resource, rlimits.get()?)
-            .try_into()
-            .unwrap()
-    })
+    Ok(unsafe { sys_getrlimit(resource, rlimits.get()?).try_into().unwrap() })
 }
 
 pub fn sys_rt_setrlimit(resource: c_int, rlimits: UserPtr<rlimit>) -> LinuxResult<isize> {
-    Ok(unsafe {
-        api::sys_setrlimit(resource, rlimits.get()?)
-            .try_into()
-            .unwrap()
-    })
+    Ok(unsafe { sys_setrlimit(resource, rlimits.get()?).try_into().unwrap() })
 }

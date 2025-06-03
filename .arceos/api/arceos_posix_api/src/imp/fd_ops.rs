@@ -94,8 +94,6 @@ pub fn sys_dup(old_fd: c_int) -> c_int {
 }
 
 /// Duplicate a file descriptor, but it uses the file descriptor number specified in `new_fd`.
-///
-/// TODO: `dup2` should forcibly close new_fd if it is already opened.
 pub fn sys_dup2(old_fd: c_int, new_fd: c_int) -> c_int {
     debug!("sys_dup2 <= old_fd: {}, new_fd: {}", old_fd, new_fd);
     syscall_body!(sys_dup2, {
@@ -111,6 +109,11 @@ pub fn sys_dup2(old_fd: c_int, new_fd: c_int) -> c_int {
             return Err(LinuxError::EBADF);
         }
 
+        if let Ok(_) = get_file_like(new_fd) {
+            sys_close(new_fd);
+        }
+
+        // close if `new_fd` is already opened
         let f = get_file_like(old_fd)?;
         FD_TABLE
             .write()

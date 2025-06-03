@@ -24,6 +24,8 @@ use memory_addr::VirtAddrRange;
 use spin::{Once, RwLock};
 use weak_map::WeakMap;
 
+use api::ctypes::rlimit;
+use arceos_posix_api as api;
 use axsync::spin::SpinNoIrq;
 
 #[macro_use]
@@ -178,6 +180,8 @@ pub struct ProcessData {
     /// The resource namespace
     pub actions: Mutex<[SignalAction; 32]>,
     pub ns: AxNamespace,
+    // max fd
+    pub fd_limit: SpinNoIrq<rlimit>,
     /// The user heap bottom
     heap_bottom: AtomicUsize,
     /// The user heap top
@@ -193,10 +197,16 @@ impl ProcessData {
             ns: AxNamespace::new_thread_local(),
             shared: SpinNoIrq::new(VecDeque::new()),
             actions: Mutex::default(),
+            fd_limit: SpinNoIrq::new(rlimit {
+                rlim_cur: api::ctypes::RLIMIT_NOFILE as _,
+                rlim_max: api::ctypes::RLIMIT_NOFILE as _,
+            }),
             heap_bottom: AtomicUsize::new(axconfig::plat::USER_HEAP_BASE),
             heap_top: AtomicUsize::new(axconfig::plat::USER_HEAP_BASE),
         }
     }
+
+    pub fn set_fd_limit() {}
 
     /// Get the bottom address of the user heap.
     pub fn get_heap_bottom(&self) -> usize {

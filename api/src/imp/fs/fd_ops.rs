@@ -4,11 +4,31 @@ use core::ffi::c_long;
 use arceos_posix_api as api;
 use axerrno::LinuxResult;
 
+use axtask::{TaskExtRef, current};
+use api::FD_TABLE;
+
+pub fn check_fd_limit() -> LinuxResult<isize> {
+    let curr = axtask::current();
+    let data = curr.task_ext().process_data();
+
+    let rlim_cur = data.fd_limit.lock().rlim_cur;
+    let fd_no: u64 = FD_TABLE.read().count().try_into().unwrap();
+    if fd_no >= rlim_cur {
+        warn!("fd no = {}, more than rlimit: {} / *", fd_no, rlim_cur);
+        return Err(axerrno::LinuxError::EMFILE);
+    } else {
+        debug!("current rlimit: {} < current fd: {}", rlim_cur, fd_no);
+    }
+    Ok(0)
+}
+
 pub fn sys_dup(old_fd: c_int) -> LinuxResult<isize> {
+    check_fd_limit()?;
     Ok(api::sys_dup(old_fd) as _)
 }
 
 pub fn sys_dup3(old_fd: c_int, new_fd: c_int) -> LinuxResult<isize> {
+    check_fd_limit()?;
     Ok(api::sys_dup2(old_fd, new_fd) as _)
 }
 

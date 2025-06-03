@@ -7,6 +7,7 @@ homepage.workspace = true
 repository.workspace = true
 
 [dependencies]
+arceos_posix_api.workspace = true
 axconfig.workspace = true
 axfs.workspace = true
 axhal.workspace = true
