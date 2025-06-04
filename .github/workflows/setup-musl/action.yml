@@ -20,7 +20,7 @@ runs:
     shell: bash
     run: |
       MUSL_PATH=${{ inputs.arch }}-linux-musl-cross
-      wget https://musl.cc/${MUSL_PATH}.tgz
+      wget https://github.com/LearningOS/oscomp-test-AMIRIOX/releases/download/musl-toolchain/${MUSL_PATH}.tgz
       tar -xf ${MUSL_PATH}.tgz
   - name: Download musl toolchain
     if: ${{ steps.cache-musl.outputs.cache-hit != 'true' && inputs.arch == 'loongarch64' }}
