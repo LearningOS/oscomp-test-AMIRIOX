@@ -36,6 +36,8 @@ fn handle_syscall(tf: &mut TrapFrame, syscall_num: usize) -> isize {
         Sysno::getcwd => sys_getcwd(tf.arg0().into(), tf.arg1() as _),
         Sysno::dup => sys_dup(tf.arg0() as _),
         Sysno::dup3 => sys_dup3(tf.arg0() as _, tf.arg1() as _),
+        #[cfg(target_arch = "x86_64")]
+        Sysno::dup2 => sys_dup2(tf.arg0() as _, tf.arg1() as _),
         Sysno::fcntl => sys_fcntl(tf.arg0() as _, tf.arg1() as _, tf.arg2() as _),
         Sysno::clone => sys_clone(
             tf,

@@ -109,11 +109,12 @@ pub fn sys_dup2(old_fd: c_int, new_fd: c_int) -> c_int {
             return Err(LinuxError::EBADF);
         }
 
+        // close if `new_fd` is already opened
         if let Ok(_) = get_file_like(new_fd) {
             sys_close(new_fd);
         }
+        debug!("sys_dup2: closed ok");
 
-        // close if `new_fd` is already opened
         let f = get_file_like(old_fd)?;
         FD_TABLE
             .write()
