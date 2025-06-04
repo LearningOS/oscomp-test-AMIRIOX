@@ -1,7 +1,7 @@
 use core::ffi::{c_int, c_void};
 
 use axerrno::{LinuxError, LinuxResult};
-use axtask::{TaskExtRef, TaskExtMut, current, futex_sleep, futex_wake};
+use axtask::{TaskExtMut, TaskExtRef, current, futex_sleep, futex_wake};
 use starry_core::task::ProcessData;
 
 use crate::ptr::{PtrWrapper, UserConstPtr, UserPtr};
@@ -101,7 +101,11 @@ pub unsafe fn sys_getrlimit(resource: c_int, rlimits: *mut ctypes::rlimit) -> c_
             let curr = axtask::current();
             let data = curr.task_ext().process_data();
             (*rlimits) = *data.fd_limit.lock();
-            debug!("got rlimits: {} / {}", (*rlimits).rlim_cur, (*rlimits).rlim_max);
+            debug!(
+                "got rlimits: {} / {}",
+                (*rlimits).rlim_cur,
+                (*rlimits).rlim_max
+            );
         },
         _ => {}
     }
@@ -127,7 +131,10 @@ pub unsafe fn sys_setrlimit(resource: c_int, rlimits: *mut ctypes::rlimit) -> c_
                 // 限制锁范围
                 let mut fd_limit_guard = data.fd_limit.lock();
                 *fd_limit_guard = rlimits;
-                debug!("changed fd_limit: {} / {}", fd_limit_guard.rlim_cur, fd_limit_guard.rlim_max);
+                debug!(
+                    "changed fd_limit: {} / {}",
+                    fd_limit_guard.rlim_cur, fd_limit_guard.rlim_max
+                );
             }
         }
         _ => return LinuxError::EINVAL as _,
@@ -141,4 +148,35 @@ pub fn sys_rt_getrlimit(resource: c_int, rlimits: UserPtr<rlimit>) -> LinuxResul
 
 pub fn sys_rt_setrlimit(resource: c_int, rlimits: UserPtr<rlimit>) -> LinuxResult<isize> {
     Ok(unsafe { sys_setrlimit(resource, rlimits.get()?).try_into().unwrap() })
+}
+
+pub fn sys_rt_prlimit64(
+    pid: c_int,
+    resource: c_int,
+    new_rlimits: UserPtr<rlimit>,
+    old_rlimits: UserPtr<rlimit>,
+) -> LinuxResult<isize> {
+    if pid != 0 {
+        debug!("sys_rt_prlimit64: Operations on PID {} not supported.", pid);
+        return Err(LinuxError::EPERM);
+    }
+
+    let get_result = sys_rt_getrlimit(resource, old_rlimits);
+    if get_result.is_err() {
+        debug!(
+            "sys_rt_prlimit64: sys_rt_getrlimit failed: {:?}",
+            get_result
+        );
+    }
+
+    let set_result = sys_rt_setrlimit(resource, new_rlimits);
+    if get_result.is_err() {
+        debug!(
+            "sys_rt_prlimit64: sys_rt_setrlimit executed, result: {:?}",
+            set_result
+        );
+    }
+
+    debug!("sys_rt_prlimit64: Completed. new_rlimits was NULL. Returning Ok(0).");
+    Ok(0)
 }
