@@ -1,4 +1,25 @@
+# test add
+/musl/busybox echo "#### OS COMP TEST GROUP START busybox ####"
+/musl/busybox echo "#### independent command test"
+/musl/busybox ash -c exit
+/musl/busybox sh -c exit
+/musl/busybox basename /aaa/bbb
+/musl/busybox cal
+/musl/busybox clear
+/musl/busybox date
+/musl/busybox dirname /aaa/bbb
+/musl/busybox expr 1 + 1
+/musl/busybox false
+/musl/busybox true
+/musl/busybox which ls
+/musl/busybox uname
+/musl/busybox uptime
+/musl/busybox printf "abcn"
+/musl/busybox pwd
+/musl/busybox echo "#### OS COMP TEST GROUP END busybox ####"
 
+
+# libc
 /musl/runtest.exe -w entry-dynamic.exe tls_get_new_dtv  # sys_futex needed
 /musl/runtest.exe -w entry-dynamic.exe pthread_*
 /musl/runtest.exe -w entry-static.exe setjmp
@@ -7,5 +28,45 @@
 /musl/runtest.exe -w entry-static.exe statvfs
 /musl/runtest.exe -w entry-static.exe utime
 /musl/runtest.exe -w entry-dynamic.exe dlopen
-/musl/runtest.exe -w entry-dynamic.exe socket
 
+
+# busybox
+/musl/busybox df
+/musl/busybox dmesg
+/musl/busybox du
+/musl/busybox ps
+/musl/busybox free
+/musl/busybox kill 10
+/musl/busybox ls
+/musl/busybox hwclock
+/musl/busybox sleep 1
+/musl/busybox echo "#### file opration test"
+/musl/busybox touch test.txt
+/musl/busybox echo "hello world" > test.txt
+/musl/busybox cat test.txt
+/musl/busybox cut -c 3 test.txt
+/musl/busybox od test.txt
+/musl/busybox head test.txt
+/musl/busybox tail test.txt
+/musl/busybox hexdump -C test.txt
+/musl/busybox md5sum test.txt
+/musl/busybox echo "ccccccc" >> test.txt
+/musl/busybox echo "bbbbbbb" >> test.txt
+/musl/busybox echo "aaaaaaa" >> test.txt
+/musl/busybox echo "2222222" >> test.txt
+/musl/busybox echo "1111111" >> test.txt
+/musl/busybox echo "bbbbbbb" >> test.txt
+/musl/busybox sort test.txt | ./busybox uniq
+/musl/busybox stat test.txt
+/musl/busybox strings test.txt
+/musl/busybox wc test.txt
+/musl/busybox [ -f test.txt ]
+/musl/busybox more test.txt
+/musl/busybox rm test.txt
+/musl/busybox mkdir test_dir
+/musl/busybox mv test_dir test
+/musl/busybox rmdir test
+/musl/busybox grep hello busybox_cmd.txt
+/musl/busybox cp busybox_cmd.txt busybox_cmd.bak
+/musl/busybox rm busybox_cmd.bak
+/musl/busybox find -name "busybox_cmd.txt"
