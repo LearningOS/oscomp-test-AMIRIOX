@@ -66,16 +66,19 @@ jobs:
           make clean
           make oscomp_run ARCH=x86_64 BLK=y NET=y FEATURES=fp_simd,lwext4_rs ACCEL=n >> x86_64_output.txt || true
           echo 'end---x86_64' >> x86_64_output.txt
+          echo 'make oscomp_run for all arch done.'
           touch output.txt
           cat riscv64_output.txt >> output.txt
           cat loongarch64_output.txt >> output.txt
           cat aarch64_output.txt >> output.txt
           cat x86_64_output.txt >> output.txt
           cat output.txt
+          echo 'cat done.'
           
       - name: Download EvaluationScript
         run: |
             git clone ${{ env.SCRIPT_REPO }} .github/classroom
+            echo 'cloned SCRIPT_REPO'
 
       - name: glibcbasic-test
         uses: oscontent25/os-autograding@master
