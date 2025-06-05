@@ -1,6 +1,7 @@
 //! Page table manipulation.
 
 use axalloc::global_allocator;
+use axlog::ax_println;
 use lazyinit::LazyInit;
 use page_table_multiarch::PagingHandler;
 
@@ -37,6 +38,12 @@ pub struct PagingHandlerImpl;
 
 impl PagingHandler for PagingHandlerImpl {
     fn alloc_frame() -> Option<PhysAddr> {
+        warn!(
+            "[mem] allocate a frame, {} / {}, last {}",
+            global_allocator().used_pages(),
+            global_allocator().used_pages() + global_allocator().available_pages(),
+            global_allocator().available_pages(),
+        );
         global_allocator()
             .alloc_pages(1, PAGE_SIZE_4K)
             .map(|vaddr| virt_to_phys(vaddr.into()))

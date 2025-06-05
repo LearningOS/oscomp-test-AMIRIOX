@@ -206,8 +206,6 @@ impl ProcessData {
         }
     }
 
-    pub fn set_fd_limit() {}
-
     /// Get the bottom address of the user heap.
     pub fn get_heap_bottom(&self) -> usize {
         self.heap_bottom.load(Ordering::Acquire)
